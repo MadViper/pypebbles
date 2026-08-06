@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
+from typing import Any
 
 
 class FluentDict[ItemT](dict[str, ItemT]):
@@ -33,3 +34,6 @@ class FluentElement[ItemT]:
 
     def __str__(self) -> str:  # pragma: no cover
         return str(self.value)
+
+
+JsonDict = FluentDict[Any]
