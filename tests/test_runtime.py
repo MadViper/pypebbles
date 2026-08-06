@@ -21,7 +21,7 @@ def variable() -> Iterable[tuple[str, str]]:
             del os.environ[name]
 
 
-def test_should_fail_to_fetch_unknown(variable: tuple[str, str]) -> None:
+def test_should_not_fetch_missing(variable: tuple[str, str]) -> None:
     name, variable = variable
 
     del os.environ[name]
@@ -38,7 +38,7 @@ def test_should_fetch_with_default(variable: tuple[str, str]) -> None:
     assert Environment().value_of(variable=name, default=default) == default
 
 
-def test_should_fetch(variable: tuple[str, str]) -> None:
+def test_should_fetch_existing(variable: tuple[str, str]) -> None:
     name, value = variable
 
     assert Environment().value_of(variable=name) == value
