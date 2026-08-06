@@ -16,6 +16,33 @@ apexcodexpy = "0.6.6"
 pytest = "*"
 pytest-cov = "*"
 
+[tool.mypy]
+strict = true
+ignore_missing_imports = true
+show_error_codes = true
+pretty = true
+
+[tool.ruff.lint]
+select = [
+    "A",
+    "ARG",
+    "B",
+    "C4",
+    "PT",
+    "RSE",
+    "RET",
+    "SIM",
+    "T20",
+    "E",
+    "W",
+    "F",
+    "I",
+    "N",
+    "UP",
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
 
 [tool.coverage.run]
 branch = true
