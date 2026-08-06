@@ -15,6 +15,7 @@ requires-python = ">=3.12,<4"
 apexcodexpy = "0.6.6"
 pytest = "*"
 pytest-cov = "*"
+faker = "*"
 
 [tool.mypy]
 strict = true
