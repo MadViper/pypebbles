@@ -44,8 +44,8 @@ def test_should_fetch_with_default(variable: tuple[str, str]) -> None:
     assert Environment().value_of(variable=name, default=default) == default
 
 
-def test_should_fail_to_fetch_unknown_as_dataclass_field() -> None:
-    name = "unknown"
+def test_should_not_inject_missing(variable: tuple[str, str]) -> None:
+    name, _ = variable
 
     @dataclass
     class _TestSubject:
