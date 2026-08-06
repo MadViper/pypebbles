@@ -1,5 +1,6 @@
 import os
 from collections.abc import Iterable
+from contextlib import suppress
 from dataclasses import dataclass
 
 import pytest
@@ -16,11 +17,14 @@ def variable() -> Iterable[tuple[str, str]]:
     try:
         yield name, value
     finally:
-        del os.environ[name]
+        with suppress(KeyError):
+            del os.environ[name]
 
 
-def test_should_fail_to_fetch_unknown() -> None:
-    name = "unknown"
+def test_should_fail_to_fetch_unknown(variable: tuple[str, str]) -> None:
+    name, variable = variable
+
+    del os.environ[name]
 
     with pytest.raises(KeyError):
         Environment().value_of(variable=name)
