@@ -30,16 +30,18 @@ def test_should_fail_to_fetch_unknown(variable: tuple[str, str]) -> None:
         Environment().value_of(variable=name)
 
 
+def test_should_fetch_with_default(variable: tuple[str, str]) -> None:
+    name, default = variable
+
+    del os.environ[name]
+
+    assert Environment().value_of(variable=name, default=default) == default
+
+
 def test_should_fetch(variable: tuple[str, str]) -> None:
     name, value = variable
 
     assert Environment().value_of(variable=name) == value
-
-
-def test_should_fetch_with_default() -> None:
-    name, default = "unknown", "known"
-
-    assert Environment().value_of(variable=name, default=default) == default
 
 
 def test_should_fail_to_fetch_unknown_as_dataclass_field() -> None:
