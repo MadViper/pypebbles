@@ -44,6 +44,16 @@ def test_should_fetch_with_default(variable: tuple[str, str]) -> None:
     assert Environment().value_of(variable=name, default=default) == default
 
 
+def test_should_inject_existing(variable: tuple[str, str]) -> None:
+    name, value = variable
+
+    @dataclass
+    class _TestSubject:
+        value: str = Environment().inject(variable=name)
+
+    assert _TestSubject().value == value
+
+
 def test_should_not_inject_missing(variable: tuple[str, str]) -> None:
     name, _ = variable
 
@@ -55,16 +65,6 @@ def test_should_not_inject_missing(variable: tuple[str, str]) -> None:
 
     with pytest.raises(KeyError):
         _TestSubject()
-
-
-def test_should_inject_existing(variable: tuple[str, str]) -> None:
-    name, value = variable
-
-    @dataclass
-    class _TestSubject:
-        value: str = Environment().inject(variable=name)
-
-    assert _TestSubject().value == value
 
 
 def test_should_inject_default() -> None:
