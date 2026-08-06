@@ -57,7 +57,7 @@ def test_should_not_inject_missing(variable: tuple[str, str]) -> None:
         _TestSubject()
 
 
-def test_should_fetch_as_dataclass_field(variable: tuple[str, str]) -> None:
+def test_should_inject_existing(variable: tuple[str, str]) -> None:
     name, value = variable
 
     @dataclass
@@ -67,7 +67,7 @@ def test_should_fetch_as_dataclass_field(variable: tuple[str, str]) -> None:
     assert _TestSubject().value == value
 
 
-def test_should_fetch_as_dataclass_field_with_default() -> None:
+def test_should_inject_default() -> None:
     name, default = "unknown", "known"
 
     @dataclass
