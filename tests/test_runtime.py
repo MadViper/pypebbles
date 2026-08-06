@@ -28,7 +28,7 @@ def test_should_fetch_existing(variable: tuple[str, str]) -> None:
 
 
 def test_should_not_fetch_missing(variable: tuple[str, str]) -> None:
-    name, variable = variable
+    name, _ = variable
 
     del os.environ[name]
 
