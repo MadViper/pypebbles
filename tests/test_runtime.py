@@ -67,8 +67,10 @@ def test_should_not_inject_missing(variable: tuple[str, str]) -> None:
         _TestSubject()
 
 
-def test_should_inject_default() -> None:
-    name, default = "unknown", "known"
+def test_should_inject_default(variable: tuple[str, str]) -> None:
+    name, default = variable
+
+    del os.environ[name]
 
     @dataclass
     class _TestSubject:
