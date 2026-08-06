@@ -2,33 +2,39 @@ import os
 from collections.abc import Iterable
 from contextlib import suppress
 from dataclasses import dataclass
+from typing import TypedDict
 
 import pytest
 
 from pypebbles.runtime import Environment
 
 
+class _Variable(TypedDict):
+    name: str
+    value: str
+
+
 @pytest.fixture
-def variable() -> Iterable[tuple[str, str]]:
+def variable() -> Iterable[_Variable]:
     name, value = "Harry", "Potter"
 
     os.environ[name] = value
 
     try:
-        yield name, value
+        yield _Variable(name=name, value=value)
     finally:
         with suppress(KeyError):
             del os.environ[name]
 
 
-def test_should_fetch_existing(variable: tuple[str, str]) -> None:
-    name, value = variable
+def test_should_fetch_existing(variable: _Variable) -> None:
+    name, value = variable["name"], variable["value"]
 
     assert Environment().value_of(variable=name) == value
 
 
-def test_should_not_fetch_missing(variable: tuple[str, str]) -> None:
-    name, _ = variable
+def test_should_not_fetch_missing(variable: _Variable) -> None:
+    name, _ = variable["name"], variable["value"]
 
     del os.environ[name]
 
@@ -36,16 +42,16 @@ def test_should_not_fetch_missing(variable: tuple[str, str]) -> None:
         Environment().value_of(variable=name)
 
 
-def test_should_fetch_with_default(variable: tuple[str, str]) -> None:
-    name, default = variable
+def test_should_fetch_with_default(variable: _Variable) -> None:
+    name, default = variable["name"], variable["value"]
 
     del os.environ[name]
 
     assert Environment().value_of(variable=name, default=default) == default
 
 
-def test_should_inject_existing(variable: tuple[str, str]) -> None:
-    name, value = variable
+def test_should_inject_existing(variable: _Variable) -> None:
+    name, value = variable["name"], variable["value"]
 
     @dataclass
     class _TestSubject:
@@ -54,8 +60,8 @@ def test_should_inject_existing(variable: tuple[str, str]) -> None:
     assert _TestSubject().value == value
 
 
-def test_should_not_inject_missing(variable: tuple[str, str]) -> None:
-    name, _ = variable
+def test_should_not_inject_missing(variable: _Variable) -> None:
+    name, _ = variable["name"], variable["value"]
 
     del os.environ[name]
 
@@ -67,8 +73,8 @@ def test_should_not_inject_missing(variable: tuple[str, str]) -> None:
         _TestSubject()
 
 
-def test_should_inject_default(variable: tuple[str, str]) -> None:
-    name, default = variable
+def test_should_inject_default(variable: _Variable) -> None:
+    name, default = variable["name"], variable["value"]
 
     del os.environ[name]
 
