@@ -13,9 +13,10 @@ def variable() -> Iterable[tuple[str, str]]:
 
     os.environ[name] = value
 
-    yield name, value
-
-    del os.environ[name]
+    try:
+        yield name, value
+    finally:
+        del os.environ[name]
 
 
 def test_should_fail_to_fetch_unknown() -> None:
