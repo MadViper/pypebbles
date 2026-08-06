@@ -47,6 +47,8 @@ def test_should_fetch_with_default(variable: tuple[str, str]) -> None:
 def test_should_not_inject_missing(variable: tuple[str, str]) -> None:
     name, _ = variable
 
+    del os.environ[name]
+
     @dataclass
     class _TestSubject:
         value: str = Environment().inject(variable=name)
