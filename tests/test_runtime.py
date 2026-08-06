@@ -21,6 +21,12 @@ def variable() -> Iterable[tuple[str, str]]:
             del os.environ[name]
 
 
+def test_should_fetch_existing(variable: tuple[str, str]) -> None:
+    name, value = variable
+
+    assert Environment().value_of(variable=name) == value
+
+
 def test_should_not_fetch_missing(variable: tuple[str, str]) -> None:
     name, variable = variable
 
@@ -36,12 +42,6 @@ def test_should_fetch_with_default(variable: tuple[str, str]) -> None:
     del os.environ[name]
 
     assert Environment().value_of(variable=name, default=default) == default
-
-
-def test_should_fetch_existing(variable: tuple[str, str]) -> None:
-    name, value = variable
-
-    assert Environment().value_of(variable=name) == value
 
 
 def test_should_fail_to_fetch_unknown_as_dataclass_field() -> None:
