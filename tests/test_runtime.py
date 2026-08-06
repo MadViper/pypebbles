@@ -19,8 +19,10 @@ def variable() -> Iterable[tuple[str, str]]:
 
 
 def test_should_fail_to_fetch_unknown() -> None:
+    name = "unknown"
+
     with pytest.raises(KeyError):
-        Environment().value_of(variable="unknown")
+        Environment().value_of(variable=name)
 
 
 def test_should_fetch(variable: tuple[str, str]) -> None:
@@ -30,15 +32,17 @@ def test_should_fetch(variable: tuple[str, str]) -> None:
 
 
 def test_should_fetch_with_default() -> None:
-    default = "known"
+    name, default = "unknown", "known"
 
-    assert Environment().value_of(variable="unknown", default=default) == default
+    assert Environment().value_of(variable=name, default=default) == default
 
 
 def test_should_fail_to_fetch_unknown_as_dataclass_field() -> None:
+    name = "unknown"
+
     @dataclass
     class _TestSubject:
-        value: str = Environment().inject(variable="unknown")
+        value: str = Environment().inject(variable=name)
 
     with pytest.raises(KeyError):
         _TestSubject()
@@ -55,8 +59,10 @@ def test_should_fetch_as_dataclass_field(variable: tuple[str, str]) -> None:
 
 
 def test_should_fetch_as_dataclass_field_with_default() -> None:
+    name, default = "unknown", "known"
+
     @dataclass
     class _TestSubject:
-        value: str = Environment().inject(variable="unknown", default="known")
+        value: str = Environment().inject(variable=name, default=default)
 
-    assert _TestSubject().value == "known"
+    assert _TestSubject().value == default
