@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import os
 from collections.abc import Iterable
 from contextlib import suppress
@@ -7,24 +9,6 @@ from typing import TypedDict
 import pytest
 
 from pypebbles.runtime import Environment
-
-
-class _Variable(TypedDict):
-    name: str
-    value: str
-
-
-@pytest.fixture
-def variable() -> Iterable[_Variable]:
-    name, value = "Harry", "Potter"
-
-    os.environ[name] = value
-
-    try:
-        yield _Variable(name=name, value=value)
-    finally:
-        with suppress(KeyError):
-            del os.environ[name]
 
 
 def test_should_fetch_existing(variable: _Variable) -> None:
@@ -83,3 +67,21 @@ def test_should_inject_default(variable: _Variable) -> None:
         value: str = Environment().inject(variable=name, default=default)
 
     assert _TestSubject().value == default
+
+
+@pytest.fixture
+def variable() -> Iterable[_Variable]:
+    name, value = "Harry", "Potter"
+
+    os.environ[name] = value
+
+    try:
+        yield _Variable(name=name, value=value)
+    finally:
+        with suppress(KeyError):
+            del os.environ[name]
+
+
+class _Variable(TypedDict):
+    name: str
+    value: str
