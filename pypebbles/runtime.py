@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from typing import Protocol
 
 
-class Provider(Protocol):
+class Provider(Protocol):  # pragma: no cover
     def required_value_of(self, variable: str) -> str:
         pass
 
