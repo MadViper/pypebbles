@@ -1,10 +1,7 @@
 import pytest
 
-from pypebbles import FluentDict, JsonDict
+from pypebbles import JsonDict
 from pypebbles.http import HttpMethod, HttpRequest, HttpTransport
-from pypebbles.http.fake import InternalEcho
-from pypebbles.http.httpx import HttpxBuilder
-from pypebbles.runtime import Environment
 
 from .echo import Echo
 
@@ -109,24 +106,6 @@ def test_should_put(transport: HttpTransport, a_json: JsonDict) -> None:
         .assert_user_agent(expected="hogwarts")
         .assert_content_type(expected="application/json")
         .assert_json(expected=a_json)
-    )
-
-
-@pytest.fixture(params=["internal", "external"])
-def transport(request: pytest.FixtureRequest) -> HttpTransport:
-    if request.param == "internal":
-        return InternalEcho(headers=FluentDict[str]({"User-Agent": "hogwarts"}))
-
-    return (
-        HttpxBuilder()
-        .with_url(
-            Environment().value_of(
-                "ECHO_SERVER",
-                default="http://localhost:8080",
-            )
-        )
-        .with_header("User-Agent", "hogwarts")
-        .transport()
     )
 
 

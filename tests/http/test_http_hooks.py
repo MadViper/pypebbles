@@ -4,19 +4,16 @@ import pytest
 
 from pypebbles.http import HttpMethod, HttpRequest, HttpResponse, HttpTransport
 from pypebbles.http.domain.hooks import Hooked
-from pypebbles.http.fake import InternalEcho
-from pypebbles.http.httpx import HttpxBuilder
-from pypebbles.runtime import Environment
 
 from .echo import Echo
 
 
 @pytest.mark.vcr
-def test_should_trigger_on_get(transport: HttpTransport) -> None:
+def test_should_trigger_on_get(hooked: HttpTransport) -> None:
     (
         HttpRequest()
         .with_endpoint("get")
-        .using(transport)
+        .using(hooked)
         .dispatch(HttpMethod.get)
         .load(Echo)
         .assert_json(expected={"X-BEFORE": "get", "X-AFTER": "get"})
@@ -24,11 +21,11 @@ def test_should_trigger_on_get(transport: HttpTransport) -> None:
 
 
 @pytest.mark.vcr
-def test_should_trigger_on_post(transport: HttpTransport) -> None:
+def test_should_trigger_on_post(hooked: HttpTransport) -> None:
     (
         HttpRequest()
         .with_endpoint("post")
-        .using(transport)
+        .using(hooked)
         .dispatch(HttpMethod.post)
         .load(Echo)
         .assert_json(expected={"X-BEFORE": "post", "X-AFTER": "post"})
@@ -36,11 +33,11 @@ def test_should_trigger_on_post(transport: HttpTransport) -> None:
 
 
 @pytest.mark.vcr
-def test_should_trigger_on_patch(transport: HttpTransport) -> None:
+def test_should_trigger_on_patch(hooked: HttpTransport) -> None:
     (
         HttpRequest()
         .with_endpoint("patch")
-        .using(transport)
+        .using(hooked)
         .dispatch(HttpMethod.patch)
         .load(Echo)
         .assert_json(expected={"X-BEFORE": "patch", "X-AFTER": "patch"})
@@ -48,39 +45,20 @@ def test_should_trigger_on_patch(transport: HttpTransport) -> None:
 
 
 @pytest.mark.vcr
-def test_should_trigger_on_delete(transport: HttpTransport) -> None:
+def test_should_trigger_on_delete(hooked: HttpTransport) -> None:
     (
         HttpRequest()
         .with_endpoint("delete")
-        .using(transport)
+        .using(hooked)
         .dispatch(HttpMethod.delete)
         .load(Echo)
         .assert_json(expected={"X-BEFORE": "delete", "X-AFTER": "delete"})
     )
 
 
-@pytest.fixture(params=["internal", "external"])
-def transport(request: pytest.FixtureRequest) -> HttpTransport:
-    return Hooked(_transport_of(kind=request.param)).attach(_Hook())
-
-
-def _transport_of(kind: str) -> HttpTransport:
-    match kind:
-        case "external":
-            return (
-                HttpxBuilder()
-                .with_url(
-                    Environment().value_of(
-                        "ECHO_SERVER",
-                        default="http://localhost:8080",
-                    )
-                )
-                .transport()
-            )
-        case "internal":
-            return InternalEcho()
-        case _:
-            raise RuntimeError(f"Unknown kind: {kind}")
+@pytest.fixture
+def hooked(transport: HttpTransport) -> HttpTransport:
+    return Hooked(transport).attach(_Hook())
 
 
 @dataclass(frozen=True)
