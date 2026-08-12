@@ -22,22 +22,25 @@ def default_cassette_name(request: pytest.FixtureRequest) -> str:
     return str(request.node.name).removeprefix("test_").removeprefix("should_")
 
 
+@pytest.fixture
+def echo_host() -> str:
+    return Environment().value_of("ECHO_SERVER", default="http://localhost:8080")
+
+
 @pytest.fixture(params=["internal", "external"])
-def echo(request: pytest.FixtureRequest) -> HttpTransport:
+def echo(request: pytest.FixtureRequest, echo_host: str) -> HttpTransport:
     match request.param:
         case "external":
             return (
                 HttpxBuilder()
-                .with_url(
-                    Environment().value_of(
-                        "ECHO_SERVER",
-                        default="http://localhost:8080",
-                    )
-                )
+                .with_url(echo_host)
                 .with_header("User-Agent", "hogwarts")
                 .transport()
             )
         case "internal":
-            return InternalEcho(headers=FluentDict[str]({"User-Agent": "hogwarts"}))
+            return InternalEcho(
+                server=echo_host,
+                headers=FluentDict[str]({"User-Agent": "hogwarts"}),
+            )
         case _ as kind:
             raise RuntimeError(f"Unknown kind: {kind}")

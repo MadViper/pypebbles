@@ -3,17 +3,11 @@ from dataclasses import dataclass
 from typing import Any, Self
 
 from pypebbles import JsonDict
-from pypebbles.runtime import Environment
 
 
 @dataclass(frozen=True)
 class Echo:
     raw: JsonDict
-
-    server: str = Environment().inject(
-        variable="ECHO_SERVER",
-        default="http://localhost:8080",
-    )
 
     def assert_header(self, name: str, value: str) -> Self:
         assert self.header(name=name) == value
@@ -24,12 +18,12 @@ class Echo:
         return str(self.raw.value_of("headers").to(dict)[name])
 
     def assert_endpoint(self, *, expected: str) -> Self:
-        assert self.raw.value_of("url").to(str) == self._url_for(expected)
+        assert self.endpoint() == expected
 
         return self
 
-    def _url_for(self, endpoint: str) -> str:
-        return self.server + "/" + endpoint.strip("/")
+    def endpoint(self) -> str:
+        return self.raw.value_of("url").to(str).rpartition("/")[-1]
 
     def assert_user_agent(self, *, expected: str) -> Self:
         assert self.header(name="User-Agent") == expected

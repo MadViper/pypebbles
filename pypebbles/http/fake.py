@@ -1,7 +1,6 @@
 from dataclasses import dataclass, field
 
 from pypebbles import FluentDict
-from pypebbles.runtime import Environment
 
 from .domain import HttpMethod, HttpRequest, HttpResponse
 from .url import HttpUrl
@@ -9,12 +8,9 @@ from .url import HttpUrl
 
 @dataclass(frozen=True)
 class InternalEcho:
-    headers: FluentDict[str] = field(default_factory=FluentDict[str])
+    server: str
 
-    server: str = Environment().inject(
-        variable="ECHO_SERVER",
-        default="http://localhost:8080",
-    )
+    headers: FluentDict[str] = field(default_factory=FluentDict[str])
 
     def deliver(self, request: HttpRequest, using: HttpMethod) -> HttpResponse:
         if request.endpoint != using.name:  # pragma: no cover

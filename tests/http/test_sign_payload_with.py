@@ -5,7 +5,6 @@ import pytest
 from pypebbles import JsonDict
 from pypebbles.http import HttpRequest, HttpTransport, SignPayloadWith
 from pypebbles.http.httpx import HttpxBuilder
-from pypebbles.runtime import Environment
 from pypebbles.security import Signature
 
 from .echo import Echo
@@ -23,15 +22,10 @@ class FakeAuthority:
 
 
 @pytest.fixture
-def transport() -> HttpTransport:
+def transport(echo_host: str) -> HttpTransport:
     return (
         HttpxBuilder()
-        .with_url(
-            Environment().value_of(
-                "ECHO_SERVER",
-                default="http://localhost:8080",
-            )
-        )
+        .with_url(echo_host)
         .before_request(SignPayloadWith(FakeAuthority()))
         .transport()
     )
