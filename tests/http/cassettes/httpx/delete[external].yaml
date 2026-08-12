@@ -5,7 +5,7 @@ interactions:
       accept:
       - '*/*'
       accept-encoding:
-      - gzip, deflate, zstd
+      - gzip, deflate
       connection:
       - keep-alive
       host:
@@ -18,9 +18,9 @@ interactions:
     body:
       string: "{\n  \"args\": {}, \n  \"data\": \"\", \n  \"files\": {}, \n  \"form\":
         {}, \n  \"headers\": {\n    \"Accept\": \"*/*\", \n    \"Accept-Encoding\":
-        \"gzip, deflate, zstd\", \n    \"Connection\": \"keep-alive\", \n    \"Host\":
-        \"localhost:8080\", \n    \"User-Agent\": \"hogwarts\"\n  }, \n  \"json\":
-        null, \n  \"origin\": \"10.10.0.75\", \n  \"url\": \"http://localhost:8080/delete\"\n}\n"
+        \"gzip, deflate\", \n    \"Connection\": \"keep-alive\", \n    \"Host\": \"localhost:8080\",
+        \n    \"User-Agent\": \"hogwarts\"\n  }, \n  \"json\": null, \n  \"origin\":
+        \"10.10.0.75\", \n  \"url\": \"http://localhost:8080/delete\"\n}\n"
     headers:
       access-control-allow-credentials:
       - 'true'
@@ -29,11 +29,11 @@ interactions:
       connection:
       - keep-alive
       content-length:
-      - '332'
+      - '326'
       content-type:
       - application/json
       date:
-      - Wed, 12 Aug 2026 06:34:36 GMT
+      - Wed, 12 Aug 2026 07:59:54 GMT
       server:
       - gunicorn/19.9.0
     status:

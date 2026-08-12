@@ -5,7 +5,7 @@ interactions:
       accept:
       - '*/*'
       accept-encoding:
-      - gzip, deflate, zstd
+      - gzip, deflate
       connection:
       - keep-alive
       content-length:
@@ -20,7 +20,7 @@ interactions:
     body:
       string: "{\n  \"args\": {}, \n  \"data\": \"\", \n  \"files\": {}, \n  \"form\":
         {}, \n  \"headers\": {\n    \"Accept\": \"*/*\", \n    \"Accept-Encoding\":
-        \"gzip, deflate, zstd\", \n    \"Connection\": \"keep-alive\", \n    \"Content-Length\":
+        \"gzip, deflate\", \n    \"Connection\": \"keep-alive\", \n    \"Content-Length\":
         \"0\", \n    \"Host\": \"localhost:8080\", \n    \"User-Agent\": \"Hogwarts\"\n
         \ }, \n  \"json\": null, \n  \"origin\": \"10.10.0.75\", \n  \"url\": \"http://localhost:8080/patch\"\n}\n"
     headers:
@@ -31,11 +31,11 @@ interactions:
       connection:
       - keep-alive
       content-length:
-      - '359'
+      - '353'
       content-type:
       - application/json
       date:
-      - Wed, 12 Aug 2026 06:34:52 GMT
+      - Wed, 12 Aug 2026 08:00:11 GMT
       server:
       - gunicorn/19.9.0
     status:

@@ -5,7 +5,7 @@ interactions:
       accept:
       - '*/*'
       accept-encoding:
-      - gzip, deflate, zstd
+      - gzip, deflate
       connection:
       - keep-alive
       handler:
@@ -13,15 +13,15 @@ interactions:
       host:
       - localhost:8080
       user-agent:
-      - python-httpx2/2.9.1
+      - python-httpx2/2.10.0
     method: GET
     uri: http://localhost:8080/get
   response:
     body:
       string: "{\n  \"args\": {}, \n  \"headers\": {\n    \"Accept\": \"*/*\", \n
-        \   \"Accept-Encoding\": \"gzip, deflate, zstd\", \n    \"Connection\": \"keep-alive\",
+        \   \"Accept-Encoding\": \"gzip, deflate\", \n    \"Connection\": \"keep-alive\",
         \n    \"Handler\": \"on_get\", \n    \"Host\": \"localhost:8080\", \n    \"User-Agent\":
-        \"python-httpx2/2.9.1\"\n  }, \n  \"origin\": \"10.10.0.75\", \n  \"url\":
+        \"python-httpx2/2.10.0\"\n  }, \n  \"origin\": \"10.10.0.75\", \n  \"url\":
         \"http://localhost:8080/get\"\n}\n"
     headers:
       access-control-allow-credentials:
@@ -31,11 +31,11 @@ interactions:
       connection:
       - keep-alive
       content-length:
-      - '303'
+      - '298'
       content-type:
       - application/json
       date:
-      - Wed, 12 Aug 2026 06:34:40 GMT
+      - Wed, 12 Aug 2026 07:59:58 GMT
       server:
       - gunicorn/19.9.0
     status:

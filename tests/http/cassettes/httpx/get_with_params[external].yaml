@@ -5,7 +5,7 @@ interactions:
       accept:
       - '*/*'
       accept-encoding:
-      - gzip, deflate, zstd
+      - gzip, deflate
       connection:
       - keep-alive
       host:
@@ -17,7 +17,7 @@ interactions:
   response:
     body:
       string: "{\n  \"args\": {\n    \"Color\": \"Yellow\"\n  }, \n  \"headers\":
-        {\n    \"Accept\": \"*/*\", \n    \"Accept-Encoding\": \"gzip, deflate, zstd\",
+        {\n    \"Accept\": \"*/*\", \n    \"Accept-Encoding\": \"gzip, deflate\",
         \n    \"Connection\": \"keep-alive\", \n    \"Host\": \"localhost:8080\",
         \n    \"User-Agent\": \"hogwarts\"\n  }, \n  \"origin\": \"10.10.0.75\", \n
         \ \"url\": \"http://localhost:8080/get?Color=Yellow\"\n}\n"
@@ -29,11 +29,11 @@ interactions:
       connection:
       - keep-alive
       content-length:
-      - '304'
+      - '298'
       content-type:
       - application/json
       date:
-      - Wed, 12 Aug 2026 06:34:31 GMT
+      - Wed, 12 Aug 2026 07:59:50 GMT
       server:
       - gunicorn/19.9.0
     status:
