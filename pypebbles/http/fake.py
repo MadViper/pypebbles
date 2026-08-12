@@ -1,6 +1,4 @@
-from __future__ import annotations
-
-from dataclasses import dataclass, field, replace
+from dataclasses import dataclass, field
 
 from pypebbles import FluentDict
 from pypebbles.runtime import Environment
@@ -11,7 +9,6 @@ from .url import HttpUrl
 
 @dataclass(frozen=True)
 class InternalEcho:
-    method: HttpMethod = HttpMethod.get
     headers: FluentDict[str] = field(default_factory=FluentDict[str])
 
     server: str = Environment().inject(
@@ -19,14 +16,8 @@ class InternalEcho:
         default="http://localhost:8080",
     )
 
-    def __call__(self, method: HttpMethod) -> InternalEcho:
-        return self.over(method)
-
-    def over(self, method: HttpMethod) -> InternalEcho:
-        return replace(self, method=method)
-
-    def transport(self, request: HttpRequest) -> HttpResponse:
-        if request.endpoint != self.method.name:
+    def deliver(self, request: HttpRequest, using: HttpMethod) -> HttpResponse:
+        if request.endpoint != using.name:
             return HttpResponse(status=405).set_json({"method": request.endpoint})
 
         return HttpResponse(status=200).set_json(

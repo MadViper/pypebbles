@@ -57,14 +57,14 @@ class HttpRequest:
             ),
         )
 
-    def using(self, transporter: HttpTransport) -> HttpDispatcher:
-        return HttpDispatcher(request=self, transporter=transporter)
+    def using(self, transport: HttpTransport) -> HttpDispatcher:
+        return HttpDispatcher(request=self, transport=transport)
 
 
 @dataclass(frozen=True)
 class HttpDispatcher:
     request: HttpRequest
-    transporter: HttpTransport
+    transport: HttpTransport
 
     def post(self) -> HttpResponse:
         return self.dispatch(HttpMethod.post)
@@ -82,15 +82,9 @@ class HttpDispatcher:
         return self.dispatch(HttpMethod.put)
 
     def dispatch(self, method: HttpMethod) -> HttpResponse:
-        return self.transporter.over(method).transport(self.request)
+        return self.transport.deliver(self.request, using=method)
 
 
 class HttpTransport(Protocol):
-    def __call__(self, method: HttpMethod) -> HttpTransport:
-        pass
-
-    def over(self, method: HttpMethod) -> HttpTransport:
-        pass
-
-    def transport(self, request: HttpRequest) -> HttpResponse:
+    def deliver(self, request: HttpRequest, using: HttpMethod) -> HttpResponse:
         pass

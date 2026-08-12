@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field, replace
+from dataclasses import dataclass, field
 
 from httpx2 import Client, Request, Response
 
@@ -68,18 +68,10 @@ class HttpxBuilder:
 class HttpxTransporter:
     client: Client
 
-    method: HttpMethod = HttpMethod.get
-
-    def __call__(self, method: HttpMethod) -> HttpxTransporter:
-        return self.over(method)
-
-    def over(self, method: HttpMethod) -> HttpxTransporter:
-        return replace(self, method=method)
-
-    def transport(self, request: HttpRequest) -> HttpResponse:
+    def deliver(self, request: HttpRequest, using: HttpMethod) -> HttpResponse:
         return self.parse(
             self.client.request(
-                method=self.method.name,
+                method=using.name,
                 url=request.endpoint,
                 headers=request.headers,
                 params=request.params,
