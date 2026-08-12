@@ -7,12 +7,12 @@ from .echo import Echo
 
 
 @pytest.mark.vcr
-def test_should_post(transport: HttpTransport, a_json: JsonDict) -> None:
+def test_should_post(echo: HttpTransport, a_json: JsonDict) -> None:
     (
         HttpRequest()
         .with_endpoint("post")
         .with_json(value=a_json)
-        .using(transport)
+        .using(echo)
         .dispatch(HttpMethod.post)
         .load(Echo)
         .assert_endpoint(expected="post")
@@ -23,12 +23,12 @@ def test_should_post(transport: HttpTransport, a_json: JsonDict) -> None:
 
 
 @pytest.mark.vcr
-def test_should_submit(transport: HttpTransport, a_json: JsonDict) -> None:
+def test_should_submit(echo: HttpTransport, a_json: JsonDict) -> None:
     (
         HttpRequest()
         .with_endpoint("post")
         .with_data(value=a_json)
-        .using(transport)
+        .using(echo)
         .dispatch(HttpMethod.post)
         .load(Echo)
         .assert_endpoint(expected="post")
@@ -39,11 +39,11 @@ def test_should_submit(transport: HttpTransport, a_json: JsonDict) -> None:
 
 
 @pytest.mark.vcr
-def test_should_get(transport: HttpTransport) -> None:
+def test_should_get(echo: HttpTransport) -> None:
     (
         HttpRequest()
         .with_endpoint("get")
-        .using(transport)
+        .using(echo)
         .dispatch(HttpMethod.get)
         .load(Echo)
         .assert_endpoint(expected="get")
@@ -52,12 +52,12 @@ def test_should_get(transport: HttpTransport) -> None:
 
 
 @pytest.mark.vcr
-def test_should_get_with_params(transport: HttpTransport) -> None:
+def test_should_get_with_params(echo: HttpTransport) -> None:
     (
         HttpRequest()
         .with_endpoint("get")
         .with_param("Color", "Yellow")
-        .using(transport)
+        .using(echo)
         .dispatch(HttpMethod.get)
         .load(Echo)
         .assert_endpoint(expected="get?Color=Yellow")
@@ -65,12 +65,12 @@ def test_should_get_with_params(transport: HttpTransport) -> None:
 
 
 @pytest.mark.vcr
-def test_should_patch(transport: HttpTransport, a_json: JsonDict) -> None:
+def test_should_patch(echo: HttpTransport, a_json: JsonDict) -> None:
     (
         HttpRequest()
         .with_endpoint("patch")
         .with_json(value=a_json)
-        .using(transport)
+        .using(echo)
         .dispatch(HttpMethod.patch)
         .load(Echo)
         .assert_endpoint(expected="patch")
@@ -81,11 +81,11 @@ def test_should_patch(transport: HttpTransport, a_json: JsonDict) -> None:
 
 
 @pytest.mark.vcr
-def test_should_delete(transport: HttpTransport) -> None:
+def test_should_delete(echo: HttpTransport) -> None:
     (
         HttpRequest()
         .with_endpoint("delete")
-        .using(transport)
+        .using(echo)
         .dispatch(HttpMethod.delete)
         .load(Echo)
         .assert_endpoint(expected="delete")
@@ -94,12 +94,12 @@ def test_should_delete(transport: HttpTransport) -> None:
 
 
 @pytest.mark.vcr
-def test_should_put(transport: HttpTransport, a_json: JsonDict) -> None:
+def test_should_put(echo: HttpTransport, a_json: JsonDict) -> None:
     (
         HttpRequest()
         .with_endpoint("put")
         .with_json(value=a_json)
-        .using(transport)
+        .using(echo)
         .dispatch(HttpMethod.put)
         .load(Echo)
         .assert_endpoint(expected="put")

@@ -23,7 +23,7 @@ def default_cassette_name(request: pytest.FixtureRequest) -> str:
 
 
 @pytest.fixture(params=["internal", "external"])
-def transport(request: pytest.FixtureRequest) -> HttpTransport:
+def echo(request: pytest.FixtureRequest) -> HttpTransport:
     match request.param:
         case "external":
             return (

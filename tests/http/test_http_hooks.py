@@ -57,8 +57,8 @@ def test_should_trigger_on_delete(hooked: HttpTransport) -> None:
 
 
 @pytest.fixture
-def hooked(transport: HttpTransport) -> HttpTransport:
-    return Hooked(transport).attach(_Hook())
+def hooked(echo: HttpTransport) -> HttpTransport:
+    return Hooked(echo).attach(_Hook())
 
 
 @dataclass(frozen=True)
