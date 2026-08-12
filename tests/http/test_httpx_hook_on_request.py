@@ -1,9 +1,10 @@
 from dataclasses import dataclass
 
 import pytest
-from httpx2 import Request
 
 from pypebbles.http import HttpMethod, HttpRequest, HttpTransport
+from pypebbles.http.domain.hooks import Hooked, NoHook
+from pypebbles.http.fake import InternalEcho
 from pypebbles.http.httpx import HttpxBuilder
 from pypebbles.runtime import Environment
 
@@ -58,9 +59,12 @@ def test_should_hook_delete_method(transport: HttpTransport) -> None:
     )
 
 
-@pytest.fixture
-def transport() -> HttpTransport:
-    return (
+@pytest.fixture(params=["internal", "external"])
+def transport(request: pytest.FixtureRequest) -> HttpTransport:
+    if request.param == "internal":
+        return Hooked(InternalEcho()).attach(_Hook())
+
+    return Hooked(
         HttpxBuilder()
         .with_url(
             Environment().value_of(
@@ -68,23 +72,17 @@ def transport() -> HttpTransport:
                 default="http://localhost:8080",
             )
         )
-        .before_request(_Handler())
         .transport()
-    )
+    ).attach(_Hook())
 
 
 @dataclass(frozen=True)
-class _Handler:
+class _Hook(NoHook):
     name: str = "Handler"
 
-    def on_get(self, request: Request) -> None:
-        request.headers[self.name] = "on_get"
-
-    def on_post(self, request: Request) -> None:
-        request.headers[self.name] = "on_post"
-
-    def on_patch(self, request: Request) -> None:
-        request.headers[self.name] = "on_patch"
-
-    def on_delete(self, request: Request) -> None:
-        request.headers[self.name] = "on_delete"
+    def before(
+        self,
+        using: HttpMethod,
+        request: HttpRequest,
+    ) -> HttpRequest:
+        return request.with_header(key=self.name, value=f"on_{using.name}")

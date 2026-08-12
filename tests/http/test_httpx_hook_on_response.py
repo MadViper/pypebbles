@@ -1,9 +1,10 @@
 from dataclasses import dataclass
 
 import pytest
-from httpx2 import Response
 
-from pypebbles.http import HttpRequest, HttpTransport
+from pypebbles.http import HttpMethod, HttpRequest, HttpResponse, HttpTransport
+from pypebbles.http.domain.hooks import Hooked, NoHook
+from pypebbles.http.fake import InternalEcho
 from pypebbles.http.httpx import HttpxBuilder
 from pypebbles.runtime import Environment
 
@@ -32,9 +33,12 @@ def test_should_hook_delete_method(transport: HttpTransport) -> None:
         HttpRequest().with_endpoint("delete").using(transport).delete()
 
 
-@pytest.fixture
-def transport() -> HttpTransport:
-    return (
+@pytest.fixture(params=["internal", "external"])
+def transport(request: pytest.FixtureRequest) -> HttpTransport:
+    if request.param == "internal":
+        return Hooked(InternalEcho()).attach(_Hook())
+
+    return Hooked(
         HttpxBuilder()
         .with_url(
             Environment().value_of(
@@ -42,22 +46,20 @@ def transport() -> HttpTransport:
                 default="http://localhost:8080",
             )
         )
-        .with_header("User-Agent", "Hogwarts")
-        .after_response(_Handler())
         .transport()
-    )
+    ).attach(_Hook())
 
 
-@dataclass
-class _Handler:
-    def on_get(self, _: Response) -> None:
-        raise ValueError("on_get")
+@dataclass(frozen=True)
+class _Hook(NoHook):
+    raises: type[Exception] = ValueError
 
-    def on_post(self, _: Response) -> None:
-        raise ValueError("on_post")
+    def after(
+        self,
+        using: HttpMethod,
+        request: HttpRequest,
+        response: HttpResponse,
+    ) -> HttpResponse:
+        _ = request, response
 
-    def on_patch(self, _: Response) -> None:
-        raise ValueError("on_patch")
-
-    def on_delete(self, _: Response) -> None:
-        raise ValueError("on_delete")
+        raise self.raises(f"on_{using.name}")

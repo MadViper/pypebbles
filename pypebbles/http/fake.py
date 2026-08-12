@@ -17,7 +17,7 @@ class InternalEcho:
     )
 
     def deliver(self, request: HttpRequest, using: HttpMethod) -> HttpResponse:
-        if request.endpoint != using.name:
+        if request.endpoint != using.name:  # pragma: no cover
             return HttpResponse(status=405).set_json({"method": request.endpoint})
 
         return HttpResponse(status=200).set_json(
