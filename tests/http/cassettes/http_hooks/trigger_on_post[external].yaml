@@ -10,22 +10,22 @@ interactions:
       - keep-alive
       content-length:
       - '0'
-      handler:
-      - on_patch
       host:
       - localhost:8080
       user-agent:
       - python-httpx2/2.10.0
-    method: PATCH
-    uri: http://localhost:8080/patch
+      x-before:
+      - post
+    method: POST
+    uri: http://localhost:8080/post
   response:
     body:
       string: "{\n  \"args\": {}, \n  \"data\": \"\", \n  \"files\": {}, \n  \"form\":
         {}, \n  \"headers\": {\n    \"Accept\": \"*/*\", \n    \"Accept-Encoding\":
         \"gzip, deflate\", \n    \"Connection\": \"keep-alive\", \n    \"Content-Length\":
-        \"0\", \n    \"Handler\": \"on_patch\", \n    \"Host\": \"localhost:8080\",
-        \n    \"User-Agent\": \"python-httpx2/2.10.0\"\n  }, \n  \"json\": null, \n
-        \ \"origin\": \"10.10.0.75\", \n  \"url\": \"http://localhost:8080/patch\"\n}\n"
+        \"0\", \n    \"Host\": \"localhost:8080\", \n    \"User-Agent\": \"python-httpx2/2.10.0\",
+        \n    \"X-Before\": \"post\"\n  }, \n  \"json\": null, \n  \"origin\": \"10.10.0.75\",
+        \n  \"url\": \"http://localhost:8080/post\"\n}\n"
     headers:
       access-control-allow-credentials:
       - 'true'
@@ -34,11 +34,11 @@ interactions:
       connection:
       - keep-alive
       content-length:
-      - '393'
+      - '389'
       content-type:
       - application/json
       date:
-      - Wed, 12 Aug 2026 11:21:00 GMT
+      - Wed, 12 Aug 2026 11:53:03 GMT
       server:
       - gunicorn/19.9.0
     status:

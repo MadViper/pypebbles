@@ -1,5 +1,6 @@
+from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import Self
+from typing import Any, Self
 
 from pypebbles import JsonDict
 from pypebbles.runtime import Environment
@@ -40,13 +41,13 @@ class Echo:
 
         return self
 
-    def assert_json(self, *, expected: JsonDict) -> Self:
-        assert self._sub_object_of(key="json") == expected
+    def assert_json(self, *, expected: Mapping[str, Any]) -> Self:
+        assert self._sub_object_of(key="json") == JsonDict(expected)
 
         return self
 
-    def assert_form(self, *, expected: JsonDict) -> Self:
-        assert self._sub_object_of(key="form") == expected
+    def assert_form(self, *, expected: Mapping[str, Any]) -> Self:
+        assert self._sub_object_of(key="form") == JsonDict(expected)
 
         return self
 

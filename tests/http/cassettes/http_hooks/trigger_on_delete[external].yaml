@@ -8,21 +8,21 @@ interactions:
       - gzip, deflate
       connection:
       - keep-alive
-      content-length:
-      - '0'
       host:
       - localhost:8080
       user-agent:
       - python-httpx2/2.10.0
-    method: PATCH
-    uri: http://localhost:8080/patch
+      x-before:
+      - delete
+    method: DELETE
+    uri: http://localhost:8080/delete
   response:
     body:
       string: "{\n  \"args\": {}, \n  \"data\": \"\", \n  \"files\": {}, \n  \"form\":
         {}, \n  \"headers\": {\n    \"Accept\": \"*/*\", \n    \"Accept-Encoding\":
-        \"gzip, deflate\", \n    \"Connection\": \"keep-alive\", \n    \"Content-Length\":
-        \"0\", \n    \"Host\": \"localhost:8080\", \n    \"User-Agent\": \"python-httpx2/2.10.0\"\n
-        \ }, \n  \"json\": null, \n  \"origin\": \"10.10.0.75\", \n  \"url\": \"http://localhost:8080/patch\"\n}\n"
+        \"gzip, deflate\", \n    \"Connection\": \"keep-alive\", \n    \"Host\": \"localhost:8080\",
+        \n    \"User-Agent\": \"python-httpx2/2.10.0\", \n    \"X-Before\": \"delete\"\n
+        \ }, \n  \"json\": null, \n  \"origin\": \"10.10.0.75\", \n  \"url\": \"http://localhost:8080/delete\"\n}\n"
     headers:
       access-control-allow-credentials:
       - 'true'
@@ -35,7 +35,7 @@ interactions:
       content-type:
       - application/json
       date:
-      - Wed, 12 Aug 2026 11:21:08 GMT
+      - Wed, 12 Aug 2026 11:53:07 GMT
       server:
       - gunicorn/19.9.0
     status:
