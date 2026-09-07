@@ -5,7 +5,7 @@ import pytest
 from pypebbles import JsonDict
 from pypebbles.http import HttpRequest, HttpTransport
 from pypebbles.http.domain.hooks import Hooked
-from pypebbles.http.drivers import HttpxBuilder
+from pypebbles.http.drivers import Httpx
 from pypebbles.http.security import SignPayloadWith
 from pypebbles.security import Signature
 
@@ -25,7 +25,7 @@ class FakeAuthority:
 
 @pytest.fixture
 def transport(echo_host: str) -> HttpTransport:
-    return Hooked(HttpxBuilder().with_url(echo_host).transport()).attach(
+    return Hooked(Httpx.Builder().with_base(url=echo_host).build()).attach(
         SignPayloadWith(FakeAuthority())
     )
 

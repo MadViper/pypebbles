@@ -1,5 +1,5 @@
-from .httpx import HttpxBuilder
+from .httpx import Httpx
 
 __all__ = [
-    "HttpxBuilder",
+    "Httpx",
 ]

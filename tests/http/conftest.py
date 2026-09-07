@@ -4,7 +4,7 @@ import pytest
 
 from pypebbles import FluentDict
 from pypebbles.http import HttpTransport
-from pypebbles.http.drivers import HttpxBuilder
+from pypebbles.http.drivers import Httpx
 from pypebbles.http.fake import InternalEcho
 from pypebbles.runtime import Environment
 
@@ -32,10 +32,10 @@ def echo(request: pytest.FixtureRequest, echo_host: str) -> HttpTransport:
     match request.param:
         case "external":
             return (
-                HttpxBuilder()
-                .with_url(echo_host)
+                Httpx.Builder()
+                .with_base(url=echo_host)
                 .with_header("User-Agent", "hogwarts")
-                .transport()
+                .build()
             )
         case "internal":
             return InternalEcho(
