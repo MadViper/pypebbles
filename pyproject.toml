@@ -10,12 +10,14 @@ dynamic = ["dependencies"]
 requires-python = ">=3.12,<4"
 
 [tool.poetry.dependencies]
+httpx2 = "*"
 
 [tool.poetry.group.dev.dependencies]
 apexcodexpy = "0.6.6"
+faker = "*"
 pytest = "*"
 pytest-cov = "*"
-faker = "*"
+pytest-recording = "*"
 
 [tool.mypy]
 strict = true

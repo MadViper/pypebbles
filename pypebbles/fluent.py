@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from typing import Any
 
@@ -15,7 +15,7 @@ class FluentDict[ItemT](dict[str, ItemT]):
     def with_a(self, **fields: ItemT) -> FluentDict[ItemT]:
         return self.merge(FluentDict[ItemT](fields))
 
-    def merge(self, other: FluentDict[ItemT]) -> FluentDict[ItemT]:
+    def merge(self, other: Mapping[str, ItemT]) -> FluentDict[ItemT]:
         return FluentDict[ItemT]({**self, **other})
 
     def drop(self, *keys: str) -> FluentDict[ItemT]:
