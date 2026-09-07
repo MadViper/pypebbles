@@ -5,7 +5,6 @@ import pytest
 from pypebbles import JsonDict
 from pypebbles.http import HttpRequest, HttpTransport
 from pypebbles.http.domain import Hooked
-from pypebbles.http.drivers import Httpx
 from pypebbles.http.security import SignPayloadWith
 from pypebbles.security import Signature
 
@@ -24,10 +23,8 @@ class FakeAuthority:
 
 
 @pytest.fixture
-def transport(echo_host: str) -> HttpTransport:
-    return Hooked(Httpx.Builder().with_base(url=echo_host).build()).attach(
-        SignPayloadWith(FakeAuthority())
-    )
+def transport(echo: HttpTransport) -> HttpTransport:
+    return Hooked(echo).attach(SignPayloadWith(FakeAuthority()))
 
 
 @pytest.mark.vcr
@@ -39,5 +36,5 @@ def test_should_hook_post_method(transport: HttpTransport) -> None:
         .using(transport)
         .post()
         .load(Echo)
-        .assert_header(name=FakeAuthority.HEADER, value='{"body":"content"}')
+        .assert_header(name=FakeAuthority.HEADER, value='{"body": "content"}')
     )
