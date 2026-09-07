@@ -5,7 +5,7 @@ import pytest
 from pypebbles import JsonDict
 from pypebbles.http import HttpRequest, HttpTransport
 from pypebbles.http.domain.hooks import Hooked
-from pypebbles.http.httpx import HttpxBuilder
+from pypebbles.http.drivers import HttpxBuilder
 from pypebbles.http.security import SignPayloadWith
 from pypebbles.security import Signature
 

@@ -5,8 +5,7 @@ from dataclasses import dataclass, field
 from httpx2 import Client, Response
 
 from pypebbles import FluentDict
-
-from ..domain import HttpMethod, HttpRequest, HttpResponse
+from pypebbles.http.domain import HttpMethod, HttpRequest, HttpResponse
 
 
 @dataclass
