@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 from httpx2 import Client, Response
 
@@ -63,3 +63,28 @@ class HttpxTransporter:
             status=response.status_code,
             content=response.content,
         )
+
+    @dataclass(frozen=True)
+    class Builder:
+        url: str = ""
+        timeout_s: int = 30
+
+        headers: FluentDict[str] = field(default_factory=FluentDict[str])
+
+        def with_base(self, *, url: str) -> HttpxTransporter.Builder:
+            return replace(self, url=url)
+
+        def with_header(self, key: str, value: str) -> HttpxTransporter.Builder:
+            return replace(self, headers=self.headers.merge({key: value}))
+
+        def with_timeout(self, *, seconds: int) -> HttpxTransporter.Builder:
+            return replace(self, timeout_s=seconds)
+
+        def build(self) -> HttpxTransporter:
+            return HttpxTransporter(
+                client=Client(
+                    base_url=self.url,
+                    timeout=self.timeout_s,
+                    headers=self.headers,
+                )
+            )
