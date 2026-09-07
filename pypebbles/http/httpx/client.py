@@ -2,26 +2,18 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from httpx2 import Client, Request, Response
+from httpx2 import Client, Response
 
 from pypebbles import FluentDict
 
 from ..domain import HttpMethod, HttpRequest, HttpResponse
-from .hooks import AfterResponseHook, BeforeRequestHook, HttpxHandler
-
-_RequestHandler = HttpxHandler[Request]
-_ResponseHandler = HttpxHandler[Response]
 
 
 @dataclass
 class HttpxBuilder:
     timeout_s: int = field(default_factory=lambda: 30)
 
-    request_handlers: list[_RequestHandler] = field(default_factory=list)
-    response_handlers: list[_ResponseHandler] = field(default_factory=list)
-
     url: str = field(init=False)
-
     headers: FluentDict[str] = field(default_factory=FluentDict[str])
 
     def with_header(self, key: str, value: str) -> HttpxBuilder:
@@ -39,16 +31,6 @@ class HttpxBuilder:
 
         return self
 
-    def before_request(self, handler: _RequestHandler) -> HttpxBuilder:
-        self.request_handlers.append(handler)
-
-        return self
-
-    def after_response(self, handler: _ResponseHandler) -> HttpxBuilder:
-        self.response_handlers.append(handler)
-
-        return self
-
     def transport(self) -> HttpxTransporter:
         return HttpxTransporter(self.client())
 
@@ -57,10 +39,6 @@ class HttpxBuilder:
             base_url=self.url,
             timeout=self.timeout_s,
             headers=self.headers,
-            event_hooks={
-                "request": [BeforeRequestHook(h) for h in self.request_handlers],
-                "response": [AfterResponseHook(h) for h in self.response_handlers],
-            },
         )
 
 
