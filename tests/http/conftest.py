@@ -4,8 +4,7 @@ import pytest
 
 from pypebbles import FluentDict
 from pypebbles.http import HttpTransport
-from pypebbles.http.drivers import Httpx
-from pypebbles.http.fake import InternalEcho
+from pypebbles.http.drivers import Httpx, InternalEcho
 from pypebbles.runtime import Environment
 
 

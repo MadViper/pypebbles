@@ -1,9 +1,8 @@
 from dataclasses import dataclass, field
 
 from pypebbles import FluentDict
-
-from .domain import HttpMethod, HttpRequest, HttpResponse
-from .url import HttpUrl
+from pypebbles.http.domain import HttpMethod, HttpRequest, HttpResponse
+from pypebbles.http.url import HttpUrl
 
 
 @dataclass(frozen=True)
