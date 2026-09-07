@@ -3,8 +3,10 @@ from dataclasses import dataclass
 import pytest
 
 from pypebbles import JsonDict
-from pypebbles.http import HttpRequest, HttpTransport, SignPayloadWith
+from pypebbles.http import HttpRequest, HttpTransport
+from pypebbles.http.domain.hooks import Hooked
 from pypebbles.http.httpx import HttpxBuilder
+from pypebbles.http.security import SignPayloadWith
 from pypebbles.security import Signature
 
 from .echo import Echo
@@ -23,11 +25,8 @@ class FakeAuthority:
 
 @pytest.fixture
 def transport(echo_host: str) -> HttpTransport:
-    return (
-        HttpxBuilder()
-        .with_url(echo_host)
-        .before_request(SignPayloadWith(FakeAuthority()))
-        .transport()
+    return Hooked(HttpxBuilder().with_url(echo_host).transport()).attach(
+        SignPayloadWith(FakeAuthority())
     )
 
 

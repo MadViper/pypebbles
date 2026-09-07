@@ -1,5 +1,5 @@
 from .domain import HttpDispatcher, HttpMethod, HttpRequest, HttpResponse, HttpTransport
-from .httpx import SignPayloadWith
+from .security import SignPayloadWith
 from .url import HttpUrl
 
 __all__ = [

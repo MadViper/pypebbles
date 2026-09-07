@@ -1,9 +1,8 @@
 from .client import HttpxBuilder
-from .hooks import DefaultHandler, HttpxHandler, SignPayloadWith
+from .hooks import DefaultHandler, HttpxHandler
 
 __all__ = [
     "HttpxBuilder",
-    "SignPayloadWith",
     "DefaultHandler",
     "HttpxHandler",
 ]
