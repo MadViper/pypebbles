@@ -30,8 +30,8 @@ class HttpxBuilder:
 
         return self
 
-    def transport(self) -> HttpxTransporter:
-        return HttpxTransporter(self.client())
+    def transport(self) -> Httpx:
+        return Httpx(self.client())
 
     def client(self) -> Client:
         return Client(
@@ -42,7 +42,7 @@ class HttpxBuilder:
 
 
 @dataclass(frozen=True)
-class HttpxTransporter:
+class Httpx:
     client: Client
 
     def deliver(self, request: HttpRequest, using: HttpMethod) -> HttpResponse:
@@ -71,17 +71,17 @@ class HttpxTransporter:
 
         headers: FluentDict[str] = field(default_factory=FluentDict[str])
 
-        def with_base(self, *, url: str) -> HttpxTransporter.Builder:
+        def with_base(self, *, url: str) -> Httpx.Builder:
             return replace(self, url=url)
 
-        def with_header(self, key: str, value: str) -> HttpxTransporter.Builder:
+        def with_header(self, key: str, value: str) -> Httpx.Builder:
             return replace(self, headers=self.headers.merge({key: value}))
 
-        def with_timeout(self, *, seconds: int) -> HttpxTransporter.Builder:
+        def with_timeout(self, *, seconds: int) -> Httpx.Builder:
             return replace(self, timeout_s=seconds)
 
-        def build(self) -> HttpxTransporter:
-            return HttpxTransporter(
+        def build(self) -> Httpx:
+            return Httpx(
                 client=Client(
                     base_url=self.url,
                     timeout=self.timeout_s,
