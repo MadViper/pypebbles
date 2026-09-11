@@ -20,7 +20,7 @@ jobs:
       - &codex
         name: Install Codex
         shell: bash
-        run: pip install apexcodexpy==0.6.6
+        run: pip install apexcodexpy==0.7.1
       - name: Lint Code
         run: codex lint --ci
   test-unit:

@@ -13,11 +13,12 @@ requires-python = ">=3.12,<4"
 httpx2 = "*"
 
 [tool.poetry.group.dev.dependencies]
-apexcodexpy = "0.6.6"
+apexcodexpy = "0.7.1"
 faker = "*"
 pytest = "*"
 pytest-cov = "*"
 pytest-recording = "*"
+hypothesis = "^6.168.0"
 
 [tool.mypy]
 strict = true
