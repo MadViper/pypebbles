@@ -1,4 +1,4 @@
-from .fake import InternalEcho
+from .echo import InternalEcho
 from .httpx import Httpx
 
 __all__ = [
