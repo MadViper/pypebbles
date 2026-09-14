@@ -7,9 +7,9 @@ from urllib.parse import urlencode
 
 from pypebbles import FluentDict, JsonDict
 
-from ..url import HttpUrl
 from .method import HttpMethod
 from .response import HttpResponse
+from .url import HttpUrl
 
 
 @dataclass(frozen=True)

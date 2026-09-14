@@ -1,7 +1,13 @@
-from .domain import HttpDispatcher, HttpMethod, HttpRequest, HttpResponse, HttpTransport
+from .domain import (
+    HttpDispatcher,
+    HttpMethod,
+    HttpRequest,
+    HttpResponse,
+    HttpTransport,
+    HttpUrl,
+)
 from .drivers import Httpx, InternalEcho
 from .security import SignPayloadWith
-from .url import HttpUrl
 
 __all__ = [
     "HttpMethod",
