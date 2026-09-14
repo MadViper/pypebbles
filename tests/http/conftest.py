@@ -3,8 +3,7 @@ from pathlib import Path
 import pytest
 
 from pypebbles import FluentDict
-from pypebbles.http import HttpTransport
-from pypebbles.http.drivers import Httpx, InternalEcho
+from pypebbles.http import HttpTransport, Httpx, InternalEcho
 from pypebbles.runtime import Environment
 
 

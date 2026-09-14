@@ -31,20 +31,22 @@ class HttpRequest:
         return self.with_headers({key: value})
 
     def with_headers(self, value: Mapping[str, str]) -> HttpRequest:
-        return replace(self, headers=self.headers.merge(FluentDict[str](value)))
+        return replace(self, headers=self.headers.merge(value))
 
     def with_param(self, key: str, value: str) -> HttpRequest:
         return self.with_params({key: value})
 
     def with_params(self, value: Mapping[str, str]) -> HttpRequest:
-        return replace(self, params=self.params.merge(FluentDict[str](value)))
+        return replace(self, params=self.params.merge(value))
 
     def with_data(self, value: JsonDict) -> HttpRequest:
         return replace(
             self,
             data=value,
             headers=self.headers.merge(
-                FluentDict[str]({"Content-Type": "application/x-www-form-urlencoded"})
+                {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                }
             ),
         )
 
@@ -53,7 +55,9 @@ class HttpRequest:
             self,
             json=value,
             headers=self.headers.merge(
-                FluentDict[str]({"Content-Type": "application/json"})
+                {
+                    "Content-Type": "application/json",
+                }
             ),
         )
 
