@@ -8,7 +8,6 @@ from urllib.parse import urlencode
 from pypebbles import FluentDict, JsonDict
 
 from .method import HttpMethod
-from .response import HttpResponse
 from .url import HttpUrl
 
 
@@ -92,6 +91,3 @@ class HttpDispatcher[T]:
 class HttpTransport[T](Protocol):
     def deliver(self, request: HttpRequest, using: HttpMethod) -> T:
         pass
-
-
-StandardTransport = HttpTransport[HttpResponse]

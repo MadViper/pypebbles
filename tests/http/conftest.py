@@ -1,10 +1,20 @@
+from dataclasses import dataclass
 from pathlib import Path
 
 import pytest
 
 from pypebbles import FluentDict
-from pypebbles.http import Httpx, InternalEcho, StandardTransport
+from pypebbles.http import (
+    HttpMethod,
+    HttpRequest,
+    HttpResponse,
+    HttpTransport,
+    Httpx,
+    InternalEcho,
+)
 from pypebbles.runtime import Environment
+
+from .echo import Echo
 
 
 @pytest.fixture(scope="module")
@@ -26,19 +36,29 @@ def echo_host() -> str:
 
 
 @pytest.fixture(params=["internal", "external"])
-def echo(request: pytest.FixtureRequest, echo_host: str) -> StandardTransport:
+def echo(request: pytest.FixtureRequest, echo_host: str) -> HttpTransport[Echo]:
     match request.param:
         case "external":
-            return (
+            return _EchoTransport(
                 Httpx.Builder()
                 .with_base(url=echo_host)
                 .with_header("User-Agent", "hogwarts")
                 .build()
             )
         case "internal":
-            return InternalEcho(
-                server=echo_host,
-                headers=FluentDict[str]({"User-Agent": "hogwarts"}),
+            return _EchoTransport(
+                InternalEcho(
+                    server=echo_host,
+                    headers=FluentDict[str]({"User-Agent": "hogwarts"}),
+                )
             )
         case _ as kind:
             raise RuntimeError(f"Unknown kind: {kind}")
+
+
+@dataclass(frozen=True)
+class _EchoTransport:
+    transport: HttpTransport[HttpResponse]
+
+    def deliver(self, request: HttpRequest, using: HttpMethod) -> Echo:
+        return self.transport.deliver(request=request, using=using).load(Echo)

@@ -1,6 +1,6 @@
 from .hooks import Hooked, HttpHook, NoHook
 from .method import HttpMethod
-from .request import HttpDispatcher, HttpRequest, HttpTransport, StandardTransport
+from .request import HttpDispatcher, HttpRequest, HttpTransport
 from .response import HttpResponse
 from .url import HttpUrl
 
@@ -13,6 +13,5 @@ __all__ = [
     "HttpRequest",
     "HttpResponse",
     "HttpTransport",
-    "StandardTransport",
     "HttpUrl",
 ]

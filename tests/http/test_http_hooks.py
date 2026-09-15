@@ -2,62 +2,58 @@ from dataclasses import dataclass
 
 import pytest
 
-from pypebbles.http import HttpMethod, HttpRequest, HttpResponse, StandardTransport
+from pypebbles.http import HttpMethod, HttpRequest, HttpTransport
 from pypebbles.http.domain.hooks import Hooked
 
 from .echo import Echo
 
 
 @pytest.mark.vcr
-def test_should_trigger_on_get(hooked: StandardTransport) -> None:
+def test_should_trigger_on_get(hooked: HttpTransport[Echo]) -> None:
     (
         HttpRequest()
         .with_endpoint("get")
         .using(hooked)
         .dispatch(HttpMethod.get)
-        .load(Echo)
         .assert_json(expected={"X-BEFORE": "get", "X-AFTER": "get"})
     )
 
 
 @pytest.mark.vcr
-def test_should_trigger_on_post(hooked: StandardTransport) -> None:
+def test_should_trigger_on_post(hooked: HttpTransport[Echo]) -> None:
     (
         HttpRequest()
         .with_endpoint("post")
         .using(hooked)
         .dispatch(HttpMethod.post)
-        .load(Echo)
         .assert_json(expected={"X-BEFORE": "post", "X-AFTER": "post"})
     )
 
 
 @pytest.mark.vcr
-def test_should_trigger_on_patch(hooked: StandardTransport) -> None:
+def test_should_trigger_on_patch(hooked: HttpTransport[Echo]) -> None:
     (
         HttpRequest()
         .with_endpoint("patch")
         .using(hooked)
         .dispatch(HttpMethod.patch)
-        .load(Echo)
         .assert_json(expected={"X-BEFORE": "patch", "X-AFTER": "patch"})
     )
 
 
 @pytest.mark.vcr
-def test_should_trigger_on_delete(hooked: StandardTransport) -> None:
+def test_should_trigger_on_delete(hooked: HttpTransport[Echo]) -> None:
     (
         HttpRequest()
         .with_endpoint("delete")
         .using(hooked)
         .dispatch(HttpMethod.delete)
-        .load(Echo)
         .assert_json(expected={"X-BEFORE": "delete", "X-AFTER": "delete"})
     )
 
 
 @pytest.fixture
-def hooked(echo: StandardTransport) -> StandardTransport:
+def hooked(echo: HttpTransport[Echo]) -> HttpTransport[Echo]:
     return Hooked(echo).attach(_Hook())
 
 
@@ -77,15 +73,15 @@ class _Hook:
         self,
         using: HttpMethod,
         request: HttpRequest,
-        response: HttpResponse,
-    ) -> HttpResponse:
+        response: Echo,
+    ) -> Echo:
         _ = request
 
-        return response.set_json(
-            {
-                "json": {
+        return Echo(
+            response.raw.with_a(
+                json={
                     "X-BEFORE": request.headers["X-BEFORE"],
                     "X-AFTER": using.name,
                 }
-            }
+            )
         )
