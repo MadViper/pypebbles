@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 
 from pypebbles import FluentDict
-from pypebbles.http import HttpTransport, Httpx, InternalEcho
+from pypebbles.http import Httpx, InternalEcho, StandardTransport
 from pypebbles.runtime import Environment
 
 
@@ -26,7 +26,7 @@ def echo_host() -> str:
 
 
 @pytest.fixture(params=["internal", "external"])
-def echo(request: pytest.FixtureRequest, echo_host: str) -> HttpTransport:
+def echo(request: pytest.FixtureRequest, echo_host: str) -> StandardTransport:
     match request.param:
         case "external":
             return (

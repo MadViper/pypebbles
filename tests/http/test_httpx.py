@@ -1,13 +1,13 @@
 import pytest
 
 from pypebbles import JsonDict
-from pypebbles.http import HttpMethod, HttpRequest, HttpTransport
+from pypebbles.http import HttpMethod, HttpRequest, StandardTransport
 
 from .echo import Echo
 
 
 @pytest.mark.vcr
-def test_should_post(echo: HttpTransport, a_json: JsonDict) -> None:
+def test_should_post(echo: StandardTransport, a_json: JsonDict) -> None:
     (
         HttpRequest()
         .with_endpoint("post")
@@ -23,7 +23,7 @@ def test_should_post(echo: HttpTransport, a_json: JsonDict) -> None:
 
 
 @pytest.mark.vcr
-def test_should_submit(echo: HttpTransport, a_json: JsonDict) -> None:
+def test_should_submit(echo: StandardTransport, a_json: JsonDict) -> None:
     (
         HttpRequest()
         .with_endpoint("post")
@@ -39,7 +39,7 @@ def test_should_submit(echo: HttpTransport, a_json: JsonDict) -> None:
 
 
 @pytest.mark.vcr
-def test_should_get(echo: HttpTransport) -> None:
+def test_should_get(echo: StandardTransport) -> None:
     (
         HttpRequest()
         .with_endpoint("get")
@@ -52,7 +52,7 @@ def test_should_get(echo: HttpTransport) -> None:
 
 
 @pytest.mark.vcr
-def test_should_get_with_params(echo: HttpTransport) -> None:
+def test_should_get_with_params(echo: StandardTransport) -> None:
     (
         HttpRequest()
         .with_endpoint("get")
@@ -65,7 +65,7 @@ def test_should_get_with_params(echo: HttpTransport) -> None:
 
 
 @pytest.mark.vcr
-def test_should_patch(echo: HttpTransport, a_json: JsonDict) -> None:
+def test_should_patch(echo: StandardTransport, a_json: JsonDict) -> None:
     (
         HttpRequest()
         .with_endpoint("patch")
@@ -81,7 +81,7 @@ def test_should_patch(echo: HttpTransport, a_json: JsonDict) -> None:
 
 
 @pytest.mark.vcr
-def test_should_delete(echo: HttpTransport) -> None:
+def test_should_delete(echo: StandardTransport) -> None:
     (
         HttpRequest()
         .with_endpoint("delete")
@@ -94,7 +94,7 @@ def test_should_delete(echo: HttpTransport) -> None:
 
 
 @pytest.mark.vcr
-def test_should_put(echo: HttpTransport, a_json: JsonDict) -> None:
+def test_should_put(echo: StandardTransport, a_json: JsonDict) -> None:
     (
         HttpRequest()
         .with_endpoint("put")

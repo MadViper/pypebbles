@@ -8,7 +8,7 @@ from .domain.hooks import NoHook
 
 
 @dataclass(frozen=True)
-class SignPayloadWith(NoHook):
+class SignPayloadWith[T](NoHook[T]):
     authority: Authority
 
     def before(self, using: HttpMethod, request: HttpRequest) -> HttpRequest:

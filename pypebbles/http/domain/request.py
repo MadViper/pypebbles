@@ -61,34 +61,37 @@ class HttpRequest:
             ),
         )
 
-    def using(self, transport: HttpTransport) -> HttpDispatcher:
+    def using[T](self, transport: HttpTransport[T]) -> HttpDispatcher[T]:
         return HttpDispatcher(request=self, transport=transport)
 
 
 @dataclass(frozen=True)
-class HttpDispatcher:
+class HttpDispatcher[T]:
     request: HttpRequest
-    transport: HttpTransport
+    transport: HttpTransport[T]
 
-    def post(self) -> HttpResponse:
+    def post(self) -> T:
         return self.dispatch(HttpMethod.post)
 
-    def get(self) -> HttpResponse:
+    def get(self) -> T:
         return self.dispatch(HttpMethod.get)
 
-    def patch(self) -> HttpResponse:
+    def patch(self) -> T:
         return self.dispatch(HttpMethod.patch)
 
-    def delete(self) -> HttpResponse:
+    def delete(self) -> T:
         return self.dispatch(HttpMethod.delete)
 
-    def put(self) -> HttpResponse:
+    def put(self) -> T:
         return self.dispatch(HttpMethod.put)
 
-    def dispatch(self, method: HttpMethod) -> HttpResponse:
+    def dispatch(self, method: HttpMethod) -> T:
         return self.transport.deliver(self.request, using=method)
 
 
-class HttpTransport(Protocol):
-    def deliver(self, request: HttpRequest, using: HttpMethod) -> HttpResponse:
+class HttpTransport[T](Protocol):
+    def deliver(self, request: HttpRequest, using: HttpMethod) -> T:
         pass
+
+
+StandardTransport = HttpTransport[HttpResponse]

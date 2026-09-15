@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import pytest
 
 from pypebbles import JsonDict
-from pypebbles.http import HttpRequest, HttpTransport
+from pypebbles.http import HttpRequest, StandardTransport
 from pypebbles.http.domain import Hooked
 from pypebbles.http.security import SignPayloadWith
 from pypebbles.security import Signature
@@ -23,12 +23,12 @@ class FakeAuthority:
 
 
 @pytest.fixture
-def transport(echo: HttpTransport) -> HttpTransport:
+def transport(echo: StandardTransport) -> StandardTransport:
     return Hooked(echo).attach(SignPayloadWith(FakeAuthority()))
 
 
 @pytest.mark.vcr
-def test_should_hook_post_method(transport: HttpTransport) -> None:
+def test_should_hook_post_method(transport: StandardTransport) -> None:
     (
         HttpRequest()
         .with_endpoint("post")

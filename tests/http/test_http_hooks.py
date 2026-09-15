@@ -2,14 +2,14 @@ from dataclasses import dataclass
 
 import pytest
 
-from pypebbles.http import HttpMethod, HttpRequest, HttpResponse, HttpTransport
+from pypebbles.http import HttpMethod, HttpRequest, HttpResponse, StandardTransport
 from pypebbles.http.domain.hooks import Hooked
 
 from .echo import Echo
 
 
 @pytest.mark.vcr
-def test_should_trigger_on_get(hooked: HttpTransport) -> None:
+def test_should_trigger_on_get(hooked: StandardTransport) -> None:
     (
         HttpRequest()
         .with_endpoint("get")
@@ -21,7 +21,7 @@ def test_should_trigger_on_get(hooked: HttpTransport) -> None:
 
 
 @pytest.mark.vcr
-def test_should_trigger_on_post(hooked: HttpTransport) -> None:
+def test_should_trigger_on_post(hooked: StandardTransport) -> None:
     (
         HttpRequest()
         .with_endpoint("post")
@@ -33,7 +33,7 @@ def test_should_trigger_on_post(hooked: HttpTransport) -> None:
 
 
 @pytest.mark.vcr
-def test_should_trigger_on_patch(hooked: HttpTransport) -> None:
+def test_should_trigger_on_patch(hooked: StandardTransport) -> None:
     (
         HttpRequest()
         .with_endpoint("patch")
@@ -45,7 +45,7 @@ def test_should_trigger_on_patch(hooked: HttpTransport) -> None:
 
 
 @pytest.mark.vcr
-def test_should_trigger_on_delete(hooked: HttpTransport) -> None:
+def test_should_trigger_on_delete(hooked: StandardTransport) -> None:
     (
         HttpRequest()
         .with_endpoint("delete")
@@ -57,7 +57,7 @@ def test_should_trigger_on_delete(hooked: HttpTransport) -> None:
 
 
 @pytest.fixture
-def hooked(echo: HttpTransport) -> HttpTransport:
+def hooked(echo: StandardTransport) -> StandardTransport:
     return Hooked(echo).attach(_Hook())
 
 
