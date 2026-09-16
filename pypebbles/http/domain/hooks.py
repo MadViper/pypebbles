@@ -5,26 +5,25 @@ from typing import Protocol
 
 from .method import HttpMethod
 from .request import HttpRequest, HttpTransport
-from .response import HttpResponse
 
 
 @dataclass(frozen=True)
-class Hooked:
-    transport: HttpTransport
+class Hooked[T]:
+    transport: HttpTransport[T]
 
-    hook: HttpHook = field(default_factory=lambda: NoHook())
+    hook: HttpHook[T] = field(default_factory=lambda: NoHook())
 
-    def attach(self, hook: HttpHook) -> Hooked:
+    def attach(self, hook: HttpHook[T]) -> Hooked[T]:
         return replace(self, hook=hook)
 
-    def deliver(self, request: HttpRequest, using: HttpMethod) -> HttpResponse:
+    def deliver(self, request: HttpRequest, using: HttpMethod) -> T:
         request = self.hook.before(using, request)
         response = self.transport.deliver(request, using)
 
         return self.hook.after(using, request, response)
 
 
-class HttpHook(Protocol):  # pragma: no cover
+class HttpHook[T](Protocol):  # pragma: no cover
     def before(
         self,
         using: HttpMethod,
@@ -36,13 +35,13 @@ class HttpHook(Protocol):  # pragma: no cover
         self,
         using: HttpMethod,
         request: HttpRequest,
-        response: HttpResponse,
-    ) -> HttpResponse:
+        response: T,
+    ) -> T:
         pass
 
 
 @dataclass(frozen=True)
-class NoHook:
+class NoHook[T]:
     def before(
         self,
         using: HttpMethod,
@@ -56,8 +55,8 @@ class NoHook:
         self,
         using: HttpMethod,
         request: HttpRequest,
-        response: HttpResponse,
-    ) -> HttpResponse:
+        response: T,
+    ) -> T:
         _ = using, request
 
         return response

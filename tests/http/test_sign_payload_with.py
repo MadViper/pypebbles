@@ -23,18 +23,17 @@ class FakeAuthority:
 
 
 @pytest.fixture
-def transport(echo: HttpTransport) -> HttpTransport:
+def transport(echo: HttpTransport[Echo]) -> HttpTransport[Echo]:
     return Hooked(echo).attach(SignPayloadWith(FakeAuthority()))
 
 
 @pytest.mark.vcr
-def test_should_hook_post_method(transport: HttpTransport) -> None:
+def test_should_hook_post_method(transport: HttpTransport[Echo]) -> None:
     (
         HttpRequest()
         .with_endpoint("post")
         .with_json(value=JsonDict().with_a(body="content"))
         .using(transport)
         .post()
-        .load(Echo)
         .assert_header(name=FakeAuthority.HEADER, value='{"body": "content"}')
     )

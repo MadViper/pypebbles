@@ -1,4 +1,4 @@
-from pypebbles.http.url import HttpUrl
+from pypebbles.http import HttpUrl
 
 
 def test_should_not_add_trailing_slash_for_empty_endpoint() -> None:

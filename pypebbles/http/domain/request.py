@@ -7,9 +7,8 @@ from urllib.parse import urlencode
 
 from pypebbles import FluentDict, JsonDict
 
-from ..url import HttpUrl
 from .method import HttpMethod
-from .response import HttpResponse
+from .url import HttpUrl
 
 
 @dataclass(frozen=True)
@@ -31,20 +30,22 @@ class HttpRequest:
         return self.with_headers({key: value})
 
     def with_headers(self, value: Mapping[str, str]) -> HttpRequest:
-        return replace(self, headers=self.headers.merge(FluentDict[str](value)))
+        return replace(self, headers=self.headers.merge(value))
 
     def with_param(self, key: str, value: str) -> HttpRequest:
         return self.with_params({key: value})
 
     def with_params(self, value: Mapping[str, str]) -> HttpRequest:
-        return replace(self, params=self.params.merge(FluentDict[str](value)))
+        return replace(self, params=self.params.merge(value))
 
     def with_data(self, value: JsonDict) -> HttpRequest:
         return replace(
             self,
             data=value,
             headers=self.headers.merge(
-                FluentDict[str]({"Content-Type": "application/x-www-form-urlencoded"})
+                {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                }
             ),
         )
 
@@ -53,38 +54,40 @@ class HttpRequest:
             self,
             json=value,
             headers=self.headers.merge(
-                FluentDict[str]({"Content-Type": "application/json"})
+                {
+                    "Content-Type": "application/json",
+                }
             ),
         )
 
-    def using(self, transport: HttpTransport) -> HttpDispatcher:
+    def using[T](self, transport: HttpTransport[T]) -> HttpDispatcher[T]:
         return HttpDispatcher(request=self, transport=transport)
 
 
 @dataclass(frozen=True)
-class HttpDispatcher:
+class HttpDispatcher[T]:
     request: HttpRequest
-    transport: HttpTransport
+    transport: HttpTransport[T]
 
-    def post(self) -> HttpResponse:
+    def post(self) -> T:
         return self.dispatch(HttpMethod.post)
 
-    def get(self) -> HttpResponse:
+    def get(self) -> T:
         return self.dispatch(HttpMethod.get)
 
-    def patch(self) -> HttpResponse:
+    def patch(self) -> T:
         return self.dispatch(HttpMethod.patch)
 
-    def delete(self) -> HttpResponse:
+    def delete(self) -> T:
         return self.dispatch(HttpMethod.delete)
 
-    def put(self) -> HttpResponse:
+    def put(self) -> T:
         return self.dispatch(HttpMethod.put)
 
-    def dispatch(self, method: HttpMethod) -> HttpResponse:
+    def dispatch(self, method: HttpMethod) -> T:
         return self.transport.deliver(self.request, using=method)
 
 
-class HttpTransport(Protocol):
-    def deliver(self, request: HttpRequest, using: HttpMethod) -> HttpResponse:
+class HttpTransport[T](Protocol):
+    def deliver(self, request: HttpRequest, using: HttpMethod) -> T:
         pass
