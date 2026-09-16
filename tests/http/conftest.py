@@ -3,7 +3,6 @@ from pathlib import Path
 
 import pytest
 
-from pypebbles import FluentDict
 from pypebbles.http import (
     HttpMethod,
     HttpRequest,
@@ -47,10 +46,10 @@ def echo(request: pytest.FixtureRequest, echo_host: str) -> HttpTransport[Echo]:
             )
         case "internal":
             return _EchoTransport(
-                InternalEcho(
-                    server=echo_host,
-                    headers=FluentDict[str]({"User-Agent": "hogwarts"}),
-                )
+                InternalEcho.Builder()
+                .with_base(url=echo_host)
+                .with_header("User-Agent", "hogwarts")
+                .build()
             )
         case _ as kind:
             raise RuntimeError(f"Unknown kind: {kind}")
