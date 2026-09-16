@@ -36,23 +36,23 @@ def echo_host() -> str:
 
 @pytest.fixture(params=["internal", "external"])
 def echo(request: pytest.FixtureRequest, echo_host: str) -> HttpTransport[Echo]:
+    builder: type[Httpx.Builder] | type[InternalEcho.Builder]
+
     match request.param:
         case "external":
-            return _EchoTransport(
-                Httpx.Builder()
-                .with_base(url=echo_host)
-                .with_header("User-Agent", "hogwarts")
-                .build()
-            )
+            builder = Httpx.Builder
         case "internal":
-            return _EchoTransport(
-                InternalEcho.Builder()
-                .with_base(url=echo_host)
-                .with_header("User-Agent", "hogwarts")
-                .build()
-            )
+            builder = InternalEcho.Builder
         case _ as kind:
             raise RuntimeError(f"Unknown kind: {kind}")
+
+    return _EchoTransport(
+        builder()
+        .with_base(url=echo_host)
+        .with_timeout(seconds=10)
+        .with_header("User-Agent", "hogwarts")
+        .build()
+    )
 
 
 @dataclass(frozen=True)
