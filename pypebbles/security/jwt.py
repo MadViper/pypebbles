@@ -17,7 +17,17 @@ class JWT:
         return self.encode(payload)
 
     def encode(self, payload: Mapping[str, Any]) -> str:
-        return jwt.encode(payload, self.secret, algorithm=self.algorithm)
+        return jwt.encode(
+            payload=dict(payload),
+            key=self.secret,
+            algorithm=self.algorithm,
+        )
 
     def decode(self, token: str) -> JsonDict:
-        return JsonDict(jwt.decode(token, key=self.secret, algorithms=[self.algorithm]))
+        return JsonDict(
+            jwt.decode(
+                jwt=token,
+                key=self.secret,
+                algorithms=[self.algorithm],
+            )
+        )

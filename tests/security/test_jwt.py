@@ -40,8 +40,8 @@ def fake() -> _Fake:
 class _Fake:
     faker: Faker = field(default_factory=Faker)
 
-    def key(self) -> bytes:
-        return self.faker.binary(length=32)
+    def key(self) -> str:
+        return self.faker.sentence(nb_words=32)
 
     def payload(self) -> Mapping[str, str | int | float]:
         return self.faker.pydict(value_types=[str, int, float])
