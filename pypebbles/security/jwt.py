@@ -24,10 +24,14 @@ class JWT:
         )
 
     def decode(self, token: str) -> JsonDict:
-        return JsonDict(
-            jwt.decode(
-                jwt=token,
-                key=self.secret,
-                algorithms=[self.algorithm],
-            )
+        try:
+            return JsonDict(self._decode(token))
+        except jwt.exceptions.InvalidTokenError as e:
+            raise ValueError("Invalid JWT token: {e}") from e
+
+    def _decode(self, token: str) -> Mapping[str, Any]:
+        return jwt.decode(
+            jwt=token,
+            key=self.secret,
+            algorithms=[self.algorithm],
         )
