@@ -1,12 +1,6 @@
-from __future__ import annotations
-
-from collections.abc import Mapping
-from dataclasses import dataclass, field
-
-import pytest
-from faker.proxy import Faker
-
 from pypebbles.security import JWT
+
+from .conftest import _Fake
 
 
 def test_token_is_the_same_for_the_same_key(fake: _Fake) -> None:
@@ -29,19 +23,3 @@ def test_roundtrip(fake: _Fake) -> None:
     payload = fake.payload()
 
     assert JWT(key).decode(JWT(key).encode(payload)) == payload
-
-
-@pytest.fixture
-def fake() -> _Fake:
-    return _Fake()
-
-
-@dataclass(frozen=True)
-class _Fake:
-    faker: Faker = field(default_factory=Faker)
-
-    def key(self) -> str:
-        return self.faker.sentence(nb_words=32)
-
-    def payload(self) -> Mapping[str, str | int | float]:
-        return self.faker.pydict(value_types=[str, int, float])
