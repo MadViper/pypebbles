@@ -1,17 +1,22 @@
-from __future__ import annotations
-
 import hmac
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
 
+class Hasher(ABC):
+    def __call__(self, value: str) -> bytes:
+        return self.hash(value)
+
+    @abstractmethod
+    def hash(self, value: str) -> bytes:
+        pass
+
+
 @dataclass(frozen=True)
-class Hmac:
+class Hmac(Hasher):
     secret: str
 
     algorithm: str = "sha256"
-
-    def __call__(self, value: str) -> bytes:
-        return self.hash(value)
 
     def hash(self, value: str) -> bytes:
         return hmac.new(
