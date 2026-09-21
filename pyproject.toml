@@ -12,7 +12,7 @@ requires-python = ">=3.12,<4"
 [tool.poetry.dependencies]
 httpx2 = "*"
 pyjwt = "^2.14.0"
-passlib = "^1.7.4"
+bcrypt = "*"
 
 [tool.poetry.group.dev.dependencies]
 apexcodexpy = "0.7.1"
