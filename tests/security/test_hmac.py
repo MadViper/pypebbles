@@ -3,14 +3,14 @@ from pypebbles.security import Hmac
 from .conftest import _Fake
 
 
-def test_hmac_is_the_same_for_the_same_key(fake: _Fake) -> None:
+def test_should_give_the_same_hash_for_same_keys(fake: _Fake) -> None:
     key = fake.key()
     message = fake.message()
 
     assert Hmac(key).hash(message) == Hmac(key).hash(message)
 
 
-def test_hmac_is_different_for_different_keys(fake: _Fake) -> None:
+def test_should_give_different_hash_for_different_keys(fake: _Fake) -> None:
     key_1 = fake.key()
     key_2 = fake.key()
     message = fake.message()
