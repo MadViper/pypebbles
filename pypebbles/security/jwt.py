@@ -5,13 +5,13 @@ from typing import Any
 import jwt
 
 from pypebbles import JsonDict
+from pypebbles.runtime import Environment
 
 
 @dataclass(frozen=True)
 class JWT:
-    secret: str
-
-    algorithm: str = "HS256"
+    secret: str = Environment().inject("JWT_SECRET")
+    algorithm: str = Environment().inject("JWT_ALGORITHM", default="HS256")
 
     def __call__(self, payload: Mapping[str, Any]) -> str:
         return self.encode(payload)
@@ -27,7 +27,7 @@ class JWT:
         try:
             return JsonDict(self._decode(token))
         except jwt.exceptions.InvalidTokenError as e:
-            raise ValueError("Invalid JWT token: {e}") from e
+            raise ValueError(f"Invalid JWT token: {e}") from e
 
     def _decode(self, token: str) -> Mapping[str, Any]:
         return jwt.decode(
