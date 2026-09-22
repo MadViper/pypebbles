@@ -69,3 +69,9 @@ class Bcrypt(Hasher):
 
     def verify(self, value: str, hashed: Hash) -> bool:
         return bcrypt.checkpw(value.encode("utf-8"), hashed.raw)
+
+
+@dataclass(frozen=True)
+class NoHash(Hasher):
+    def hash(self, value: str) -> Hash:
+        return Hash(value.encode("utf-8"))
