@@ -1,7 +1,6 @@
 import pytest
 
-from pypebbles.security import Hmac
-from pypebbles.security.hashing import Bcrypt, Hasher, NoHash
+from pypebbles.security import Bcrypt, Hasher, Hmac, NoHash
 
 from .conftest import _Fake
 
