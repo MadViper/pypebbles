@@ -15,12 +15,12 @@ pyjwt = "*"
 bcrypt = "*"
 
 [tool.poetry.group.dev.dependencies]
-apexcodexpy = "0.7.1"
+apexcodexpy = "0.8.1"
 faker = "*"
 pytest = "*"
 pytest-cov = "*"
 pytest-recording = "*"
-hypothesis = "^6.168.0"
+hypothesis = "^6.169.0"
 
 [tool.mypy]
 strict = true
