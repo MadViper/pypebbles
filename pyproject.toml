@@ -61,6 +61,10 @@ select = [
     "UP",
     "W",
 ]
+ignore=[
+    "TRY003",
+    "PLR2004",
+]
 
 [tool.ruff.lint.mccabe]
 max-complexity = 10
