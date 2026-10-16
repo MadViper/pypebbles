@@ -3,13 +3,13 @@ from .hashing import Bcrypt, Hash, Hasher, Hmac, NoHash
 from .jwt import JWT
 
 __all__ = [
+    "JWT",
     "Authority",
-    "Encoder",
-    "Signature",
     "Bcrypt",
+    "Encoder",
     "Hash",
     "Hasher",
     "Hmac",
     "NoHash",
-    "JWT",
+    "Signature",
 ]

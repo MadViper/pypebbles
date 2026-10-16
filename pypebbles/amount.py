@@ -23,7 +23,7 @@ class Amount:
     def _gcd(self) -> int:
         return math.gcd(self.value, self.exponent)
 
-    def reduce(self, when: bool = True) -> Amount:
+    def reduce(self, *, when: bool = True) -> Amount:
         if not when:
             return self
 
@@ -76,6 +76,9 @@ class Amount:
             return self.as_decimal() == other
 
         return False  # pragma: no cover
+
+    def __hash__(self) -> int:
+        return hash(self.as_decimal())
 
     def __float__(self) -> float:
         return float(self.as_decimal())

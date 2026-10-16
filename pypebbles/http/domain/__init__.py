@@ -6,12 +6,12 @@ from .url import HttpUrl
 
 __all__ = [
     "Hooked",
-    "HttpHook",
-    "NoHook",
-    "HttpMethod",
     "HttpDispatcher",
+    "HttpHook",
+    "HttpMethod",
     "HttpRequest",
     "HttpResponse",
     "HttpTransport",
     "HttpUrl",
+    "NoHook",
 ]

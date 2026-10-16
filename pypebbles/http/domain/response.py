@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import json
-from collections.abc import Callable, Mapping
 from dataclasses import dataclass
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from pypebbles import JsonDict
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Mapping
 
 
 @dataclass(frozen=True)

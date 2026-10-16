@@ -1,14 +1,16 @@
 from __future__ import annotations
 
-from collections.abc import Mapping
 from dataclasses import dataclass, field, replace
-from typing import Protocol
+from typing import TYPE_CHECKING, Protocol
 from urllib.parse import urlencode
 
 from pypebbles import FluentDict, JsonDict
 
 from .method import HttpMethod
 from .url import HttpUrl
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
 
 
 @dataclass(frozen=True)

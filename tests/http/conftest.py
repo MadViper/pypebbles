@@ -36,7 +36,7 @@ def echo_host() -> str:
 
 @pytest.fixture(params=["internal", "external"])
 def echo(request: pytest.FixtureRequest, echo_host: str) -> HttpTransport[Echo]:
-    builder: type[Httpx.Builder] | type[InternalEcho.Builder]
+    builder: type[Httpx.Builder | InternalEcho.Builder]
 
     match request.param:
         case "external":

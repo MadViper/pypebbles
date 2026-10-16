@@ -1,17 +1,40 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field, replace
-from typing import Protocol
+from typing import TYPE_CHECKING, Protocol
 
-from .method import HttpMethod
-from .request import HttpRequest, HttpTransport
+if TYPE_CHECKING:
+    from .method import HttpMethod
+    from .request import HttpRequest, HttpTransport
+
+
+@dataclass(frozen=True)
+class NoHook[T]:
+    def before(
+        self,
+        using: HttpMethod,
+        request: HttpRequest,
+    ) -> HttpRequest:
+        _ = using
+
+        return request
+
+    def after(
+        self,
+        using: HttpMethod,
+        request: HttpRequest,
+        response: T,
+    ) -> T:
+        _ = using, request
+
+        return response
 
 
 @dataclass(frozen=True)
 class Hooked[T]:
     transport: HttpTransport[T]
 
-    hook: HttpHook[T] = field(default_factory=lambda: NoHook())
+    hook: HttpHook[T] = field(default_factory=NoHook)
 
     def attach(self, hook: HttpHook[T]) -> Hooked[T]:
         return replace(self, hook=hook)
@@ -38,25 +61,3 @@ class HttpHook[T](Protocol):  # pragma: no cover
         response: T,
     ) -> T:
         pass
-
-
-@dataclass(frozen=True)
-class NoHook[T]:
-    def before(
-        self,
-        using: HttpMethod,
-        request: HttpRequest,
-    ) -> HttpRequest:
-        _ = using
-
-        return request
-
-    def after(
-        self,
-        using: HttpMethod,
-        request: HttpRequest,
-        response: T,
-    ) -> T:
-        _ = using, request
-
-        return response

@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import Any, Protocol
+from typing import TYPE_CHECKING, Any, Protocol
 
-from pypebbles import JsonDict
+if TYPE_CHECKING:
+    from collections.abc import Mapping
+
+    from pypebbles import JsonDict
 
 
 class Authority(Protocol):  # pragma: no cover

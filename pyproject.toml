@@ -2,31 +2,26 @@
 name = "pypebbles"
 version = "0.3.6"
 description = "Python Pebbles"
-authors = [
-    {name = "Mike Pebbles", email = "mq.pebbles@gmail.com"}
-]
 readme = "README.md"
-dynamic = ["dependencies"]
+authors = [ { name = "Mike Pebbles", email = "mq.pebbles@gmail.com" } ]
 requires-python = ">=3.12,<4"
+dynamic = [ "dependencies" ]
 
 [tool.poetry.dependencies]
+bcrypt = "*"
 httpx2 = "*"
 pyjwt = "*"
-bcrypt = "*"
 
 [tool.poetry.group.dev.dependencies]
-apexcodexpy = "0.7.1"
+apexcodexpy = "0.8.*"
 faker = "*"
+hypothesis = "*"
 pytest = "*"
 pytest-cov = "*"
 pytest-recording = "*"
-hypothesis = "^6.168.0"
 
-[tool.mypy]
-strict = true
-ignore_missing_imports = true
-show_error_codes = true
-pretty = true
+[tool.ruff.lint.mccabe]
+max-complexity = 10
 
 [tool.ruff.lint]
 select = [
@@ -34,30 +29,52 @@ select = [
     "ARG",
     "B",
     "C4",
-    "PT",
-    "RSE",
-    "RET",
-    "SIM",
-    "T20",
+    "DTZ",
     "E",
-    "W",
     "F",
+    "FBT",
+    "FLY",
+    "FURB",
     "I",
+    "LOG",
     "N",
+    "PERF",
+    "PGH",
+    "PIE",
+    "PL",
+    "PT",
+    "PTH",
+    "PYI",
+    "RET",
+    "RSE",
+    "RUF",
+    "SIM",
+    "SLF",
+    "T20",
+    "TCH",
+    "TRY",
     "UP",
+    "W",
+]
+ignore = [
+    "PLR2004",
+    "TRY003",
 ]
 
-[tool.ruff.lint.mccabe]
-max-complexity = 10
+[tool.mypy]
+ignore_missing_imports = true
+strict = true
+pretty = true
+show_error_codes = true
 
 [tool.coverage.run]
-branch = true
 source = [
     "pypebbles",
     "tests",
 ]
+branch = true
 
 [tool.coverage.report]
-skip_empty = true
 skip_covered = true
+skip_empty = true
 show_missing = true
