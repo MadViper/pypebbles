@@ -6,7 +6,7 @@ from .domain import (
     HttpTransport,
     HttpUrl,
 )
-from .drivers import Httpx, InternalEcho
+from .drivers import Httpx, InternalEcho, PreSetHttp
 from .security import SignPayloadWith
 
 __all__ = [
@@ -18,5 +18,6 @@ __all__ = [
     "HttpUrl",
     "Httpx",
     "InternalEcho",
+    "PreSetHttp",
     "SignPayloadWith",
 ]
