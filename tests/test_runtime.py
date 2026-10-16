@@ -1,14 +1,16 @@
 from __future__ import annotations
 
 import os
-from collections.abc import Iterable
 from contextlib import suppress
 from dataclasses import dataclass
-from typing import TypedDict
+from typing import TYPE_CHECKING, TypedDict
 
 import pytest
 
 from pypebbles.runtime import Environment
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 
 def test_should_fetch_existing(variable: _Variable) -> None:
