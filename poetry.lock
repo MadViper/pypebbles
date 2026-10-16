@@ -34,14 +34,14 @@ trio = ["trio (>=0.32.0)"]
 
 [[package]]
 name = "apexcodexpy"
-version = "0.8.2"
+version = "0.8.3"
 description = "The Non-Destructive Configuration Steward for Python Projects."
 optional = false
 python-versions = "<4,>=3.11"
 groups = ["dev"]
 files = [
-    {file = "apexcodexpy-0.8.2-py3-none-any.whl", hash = "sha256:99c4a46329c0a0f7fbc03d68a5efdca9620253e66f3aaa77b2ca5a412e0558a2"},
-    {file = "apexcodexpy-0.8.2.tar.gz", hash = "sha256:ea9046344ce775c141c86d59a5e353da28173a7e91ce841181b32ef47fd9a566"},
+    {file = "apexcodexpy-0.8.3-py3-none-any.whl", hash = "sha256:be21c7f58c10be97ce14b9deaab6b996cda82ccfd60166c614bdba64ba6d9f85"},
+    {file = "apexcodexpy-0.8.3.tar.gz", hash = "sha256:7c5e9734a8dee179c0848deff5aee7c7d8eb7784c2fdd1acf6a83de5ff5deaf6"},
 ]
 
 [package.dependencies]
