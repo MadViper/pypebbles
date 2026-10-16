@@ -1,6 +1,6 @@
 [project]
 name = "pypebbles"
-version = "0.3.6"
+version = "0.3.7"
 description = "Python Pebbles"
 readme = "README.md"
 authors = [ { name = "Mike Pebbles", email = "mq.pebbles@gmail.com" } ]
