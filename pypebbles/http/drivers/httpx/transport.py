@@ -1,11 +1,23 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field, replace
+from typing import TYPE_CHECKING
 
 from httpx2 import Client, Response
 
 from pypebbles import FluentDict
 from pypebbles.http.domain import HttpMethod, HttpRequest, HttpResponse
+
+from .hooks import (
+    AfterResponseHook,
+    BeforeRequestHook,
+    RequestHandler,
+    ResponseHandler,
+    SignPayloadWith,
+)
+
+if TYPE_CHECKING:
+    from pypebbles.security import Authority
 
 
 @dataclass(frozen=True)
@@ -38,6 +50,9 @@ class Httpx:
 
         headers: FluentDict[str] = field(default_factory=FluentDict[str])
 
+        request_handlers: list[RequestHandler] = field(default_factory=list)
+        response_handlers: list[ResponseHandler] = field(default_factory=list)
+
         def with_base(self, *, url: str) -> Httpx.Builder:
             return replace(self, url=url)
 
@@ -47,11 +62,36 @@ class Httpx:
         def with_timeout(self, *, seconds: int) -> Httpx.Builder:
             return replace(self, timeout_s=seconds)
 
+        def sign_payload_with(self, authority: Authority) -> Httpx.Builder:
+            self.request_handlers.append(SignPayloadWith(authority))
+
+            return self
+
+        def before_request(self, handler: RequestHandler) -> Httpx.Builder:
+            self.request_handlers.append(handler)
+
+            return self
+
+        def after_response(self, handler: ResponseHandler) -> Httpx.Builder:
+            self.response_handlers.append(handler)
+
+            return self
+
         def build(self) -> Httpx:
             return Httpx(
                 client=Client(
                     base_url=self.url,
                     timeout=self.timeout_s,
                     headers=self.headers,
+                    event_hooks={
+                        "request": [
+                            BeforeRequestHook(handler)
+                            for handler in self.request_handlers
+                        ],
+                        "response": [
+                            AfterResponseHook(handler)
+                            for handler in self.response_handlers
+                        ],
+                    },
                 )
             )
