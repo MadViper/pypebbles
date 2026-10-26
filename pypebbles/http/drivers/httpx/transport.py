@@ -6,7 +6,13 @@ from typing import TYPE_CHECKING
 from httpx2 import Client, Response
 
 from pypebbles import FluentDict
-from pypebbles.http.domain import HttpMethod, HttpRequest, HttpResponse
+from pypebbles.http.domain import (
+    Hooked,
+    HttpHook,
+    HttpMethod,
+    HttpRequest,
+    HttpResponse,
+)
 
 from .hooks import (
     AfterResponseHook,
@@ -17,6 +23,7 @@ from .hooks import (
 )
 
 if TYPE_CHECKING:
+    from pypebbles.http.domain import HttpTransport
     from pypebbles.security import Authority
 
 
@@ -42,6 +49,9 @@ class Httpx:
             status=response.status_code,
             content=response.content,
         )
+
+    def hook(self, with_a: HttpHook[HttpResponse]) -> HttpTransport[HttpResponse]:
+        return Hooked(self, hook=with_a)
 
     @dataclass(frozen=True)
     class Builder:
