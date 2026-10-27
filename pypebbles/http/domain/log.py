@@ -61,15 +61,15 @@ class _Device(Protocol):
 class EchoDevice:
     name: str
 
-    echo_fn: Callable[[str], Any] = print
+    echo: Callable[[str], Any] = print
 
     def echo_request(self, log: HttpRequestLog) -> None:
-        self.echo_fn(f"[{self.name}] ===>")
-        self.echo_fn(log.dumps())
+        self.echo(f"[{self.name}] Request:")
+        self.echo(log.dumps())
 
     def echo_response(self, log: HttpResponseLog) -> None:
-        self.echo_fn(f"[{self.name}] <===")
-        self.echo_fn(log.dumps())
+        self.echo(f"[{self.name}] Response:")
+        self.echo(log.dumps())
 
 
 @dataclass(frozen=True, kw_only=True)

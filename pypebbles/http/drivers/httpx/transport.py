@@ -91,14 +91,7 @@ class Httpx:
             return self
 
         def log(self, name: str, echo: Callable[[str], Any] = print) -> Httpx.Builder:
-            return self.hook(
-                with_a=AccessLog(
-                    device=EchoDevice(
-                        name=name,
-                        echo_fn=echo,
-                    )
-                )
-            )
+            return self.hook(with_a=AccessLog(device=EchoDevice(name=name, echo=echo)))
 
         def hook(self, with_a: HttpHook[HttpResponse]) -> Httpx.Builder:
             self.hooks.append(with_a)
