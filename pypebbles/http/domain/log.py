@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 
 @dataclass(frozen=True)
 class AccessLog:
-    device: Device = field(default_factory=lambda: EchoDevice(name="http.access"))
+    device: _Device = field(default_factory=lambda: EchoDevice(name="http.access"))
 
     def before(
         self,
@@ -49,7 +49,7 @@ class AccessLog:
         return response
 
 
-class Device(Protocol):
+class _Device(Protocol):
     def echo_request(self, log: HttpRequestLog) -> None:
         pass
 
@@ -63,15 +63,13 @@ class EchoDevice:
 
     echo_fn: Callable[[str], Any] = print
 
-    def echo(self, *messages: Any) -> None:
-        self.echo_fn(f"[{self.name}]")
-        self.echo_fn(" ".join(str(s) for s in messages))
-
     def echo_request(self, log: HttpRequestLog) -> None:
-        self.echo("===>", log.dumps())
+        self.echo_fn(f"[{self.name}] ===>")
+        self.echo_fn(log.dumps())
 
     def echo_response(self, log: HttpResponseLog) -> None:
-        self.echo("<===", log.dumps())
+        self.echo_fn(f"[{self.name}] <===")
+        self.echo_fn(log.dumps())
 
 
 @dataclass(frozen=True, kw_only=True)
