@@ -51,6 +51,7 @@ def echo(request: pytest.FixtureRequest, echo_host: str) -> HttpTransport[Echo]:
         .with_base(url=echo_host)
         .with_timeout(seconds=10)
         .with_header("User-Agent", "hogwarts")
+        .log(name="http.access")
         .build()
     )
 

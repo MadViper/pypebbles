@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field, replace
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from httpx2 import Client, Response
 
 from pypebbles import FluentDict
 from pypebbles.http.domain import (
+    AccessLog,
+    EchoDevice,
     Hooked,
     HttpHook,
     HttpMethod,
@@ -23,6 +25,8 @@ from .hooks import (
 )
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from pypebbles.http.domain import HttpTransport
     from pypebbles.security import Authority
 
@@ -50,9 +54,6 @@ class Httpx:
             content=response.content,
         )
 
-    def hook(self, with_a: HttpHook[HttpResponse]) -> HttpTransport[HttpResponse]:
-        return Hooked(self, hook=with_a)
-
     @dataclass(frozen=True)
     class Builder:
         url: str = ""
@@ -62,6 +63,8 @@ class Httpx:
 
         request_handlers: list[RequestHandler] = field(default_factory=list)
         response_handlers: list[ResponseHandler] = field(default_factory=list)
+
+        hooks: list[HttpHook[HttpResponse]] = field(default_factory=list)
 
         def with_base(self, *, url: str) -> Httpx.Builder:
             return replace(self, url=url)
@@ -87,21 +90,43 @@ class Httpx:
 
             return self
 
-        def build(self) -> Httpx:
-            return Httpx(
-                client=Client(
-                    base_url=self.url,
-                    timeout=self.timeout_s,
-                    headers=self.headers,
-                    event_hooks={
-                        "request": [
-                            BeforeRequestHook(handler)
-                            for handler in self.request_handlers
-                        ],
-                        "response": [
-                            AfterResponseHook(handler)
-                            for handler in self.response_handlers
-                        ],
-                    },
+        def log(self, name: str, echo: Callable[[str], Any] = print) -> Httpx.Builder:
+            return self.hook(
+                with_a=AccessLog(
+                    device=EchoDevice(
+                        name=name,
+                        echo_fn=echo,
+                    )
                 )
+            )
+
+        def hook(self, with_a: HttpHook[HttpResponse]) -> Httpx.Builder:
+            self.hooks.append(with_a)
+
+            return self
+
+        def build(self) -> HttpTransport[HttpResponse]:
+            return self.with_hooks(Httpx(client=self.client()))
+
+        def with_hooks(self, http: Httpx) -> HttpTransport[HttpResponse]:
+            transport: HttpTransport[HttpResponse] = http
+
+            for hook in self.hooks:
+                transport = Hooked(transport, hook=hook)
+
+            return transport
+
+        def client(self) -> Client:
+            return Client(
+                base_url=self.url,
+                timeout=self.timeout_s,
+                headers=self.headers,
+                event_hooks={
+                    "request": [
+                        BeforeRequestHook(handler) for handler in self.request_handlers
+                    ],
+                    "response": [
+                        AfterResponseHook(handler) for handler in self.response_handlers
+                    ],
+                },
             )

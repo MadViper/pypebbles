@@ -1,5 +1,6 @@
 from .domain import (
     HttpDispatcher,
+    HttpHook,
     HttpMethod,
     HttpRequest,
     HttpResponse,
@@ -11,6 +12,7 @@ from .security import SignPayloadWith
 
 __all__ = [
     "HttpDispatcher",
+    "HttpHook",
     "HttpMethod",
     "HttpRequest",
     "HttpResponse",
