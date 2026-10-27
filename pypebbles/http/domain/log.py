@@ -28,7 +28,7 @@ class AccessLog:
     ) -> HttpRequest:
         log = HttpRequestLog(method=using, request=request)
 
-        self.device.echo("===>", log.dumps())
+        self.device.echo_request(log)
 
         return request.with_header(key="X-Trace-Id", value=log.trace_id)
 
@@ -44,13 +44,16 @@ class AccessLog:
             response=response,
         )
 
-        self.device.echo("<===", log.dumps())
+        self.device.echo_response(log)
 
         return response
 
 
 class Device(Protocol):
-    def echo(self, *message: str) -> None:
+    def echo_request(self, log: HttpRequestLog) -> None:
+        pass
+
+    def echo_response(self, log: HttpResponseLog) -> None:
         pass
 
 
@@ -63,6 +66,12 @@ class EchoDevice:
     def echo(self, *messages: Any) -> None:
         self.echo_fn(f"[{self.name}]")
         self.echo_fn(" ".join(str(s) for s in messages))
+
+    def echo_request(self, log: HttpRequestLog) -> None:
+        self.echo("===>", log.dumps())
+
+    def echo_response(self, log: HttpResponseLog) -> None:
+        self.echo("<===", log.dumps())
 
 
 @dataclass(frozen=True, kw_only=True)
