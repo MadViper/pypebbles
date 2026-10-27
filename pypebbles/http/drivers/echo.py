@@ -1,9 +1,20 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field, replace
+from typing import TYPE_CHECKING, Any
 
 from pypebbles import FluentDict
-from pypebbles.http import HttpMethod, HttpRequest, HttpResponse, HttpTransport, HttpUrl
+from pypebbles.http import (
+    HttpHook,
+    HttpMethod,
+    HttpRequest,
+    HttpResponse,
+    HttpTransport,
+    HttpUrl,
+)
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 @dataclass(frozen=True)
@@ -39,6 +50,20 @@ class InternalEcho:
 
         def with_timeout(self, *, seconds: int) -> InternalEcho.Builder:
             _ = seconds
+
+            return self
+
+        def hook(self, with_a: HttpHook[HttpResponse]) -> InternalEcho.Builder:
+            _ = with_a
+
+            return self
+
+        def log(
+            self,
+            name: str,
+            echo_fn: Callable[[str], Any] = print,
+        ) -> InternalEcho.Builder:
+            _ = name, echo_fn
 
             return self
 
