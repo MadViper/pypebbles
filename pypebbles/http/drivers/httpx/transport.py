@@ -1,19 +1,15 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field, replace
-from typing import TYPE_CHECKING, Any
+from dataclasses import dataclass, field
+from typing import TYPE_CHECKING, Self
 
 from httpx2 import Client, Response
 
-from pypebbles import FluentDict
 from pypebbles.http.domain import (
-    AccessLog,
-    EchoDevice,
-    Hooked,
-    HttpHook,
     HttpMethod,
     HttpRequest,
     HttpResponse,
+    HttpTransportBuilder,
 )
 
 from .hooks import (
@@ -25,9 +21,7 @@ from .hooks import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
-
-    from pypebbles.http.domain import HttpTransport
+    from pypebbles.http import HttpTransport
     from pypebbles.security import Authority
 
 
@@ -55,59 +49,27 @@ class Httpx:
         )
 
     @dataclass(frozen=True)
-    class Builder:
-        url: str = ""
-        timeout_s: int = 30
-
-        headers: FluentDict[str] = field(default_factory=FluentDict[str])
-
+    class Builder(HttpTransportBuilder):
         request_handlers: list[RequestHandler] = field(default_factory=list)
         response_handlers: list[ResponseHandler] = field(default_factory=list)
 
-        hooks: list[HttpHook[HttpResponse]] = field(default_factory=list)
-
-        def with_base(self, *, url: str) -> Httpx.Builder:
-            return replace(self, url=url)
-
-        def with_header(self, key: str, value: str) -> Httpx.Builder:
-            return replace(self, headers=self.headers.merge({key: value}))
-
-        def with_timeout(self, *, seconds: int) -> Httpx.Builder:
-            return replace(self, timeout_s=seconds)
-
-        def sign_payload_with(self, authority: Authority) -> Httpx.Builder:
+        def sign_payload_with(self, authority: Authority) -> Self:
             self.request_handlers.append(SignPayloadWith(authority))
 
             return self
 
-        def before_request(self, handler: RequestHandler) -> Httpx.Builder:
+        def before_request(self, handler: RequestHandler) -> Self:
             self.request_handlers.append(handler)
 
             return self
 
-        def after_response(self, handler: ResponseHandler) -> Httpx.Builder:
+        def after_response(self, handler: ResponseHandler) -> Self:
             self.response_handlers.append(handler)
 
             return self
 
-        def log(self, name: str, echo: Callable[[str], Any] = print) -> Httpx.Builder:
-            return self.hook(with_a=AccessLog(device=EchoDevice(name=name, echo=echo)))
-
-        def hook(self, with_a: HttpHook[HttpResponse]) -> Httpx.Builder:
-            self.hooks.append(with_a)
-
-            return self
-
-        def build(self) -> HttpTransport[HttpResponse]:
-            return self.with_hooks(Httpx(client=self.client()))
-
-        def with_hooks(self, http: Httpx) -> HttpTransport[HttpResponse]:
-            transport: HttpTransport[HttpResponse] = http
-
-            for hook in self.hooks:
-                transport = Hooked(transport, hook=hook)
-
-            return transport
+        def transport(self) -> HttpTransport[HttpResponse]:
+            return Httpx(client=self.client())
 
         def client(self) -> Client:
             return Client(

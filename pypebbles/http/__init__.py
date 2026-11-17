@@ -5,6 +5,7 @@ from .domain import (
     HttpRequest,
     HttpResponse,
     HttpTransport,
+    HttpTransportBuilder,
     HttpUrl,
 )
 from .drivers import Httpx, InternalEcho, PreSetHttp
@@ -17,6 +18,7 @@ __all__ = [
     "HttpRequest",
     "HttpResponse",
     "HttpTransport",
+    "HttpTransportBuilder",
     "HttpUrl",
     "Httpx",
     "InternalEcho",

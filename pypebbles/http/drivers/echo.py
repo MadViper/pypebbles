@@ -1,20 +1,16 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field, replace
-from typing import TYPE_CHECKING, Any
+from dataclasses import dataclass, field
 
 from pypebbles import FluentDict
 from pypebbles.http import (
-    HttpHook,
     HttpMethod,
     HttpRequest,
     HttpResponse,
     HttpTransport,
+    HttpTransportBuilder,
     HttpUrl,
 )
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
 
 
 @dataclass(frozen=True)
@@ -37,35 +33,6 @@ class InternalEcho:
         )
 
     @dataclass(frozen=True)
-    class Builder:
-        url: str = ""
-
-        headers: FluentDict[str] = field(default_factory=FluentDict[str])
-
-        def with_base(self, *, url: str) -> InternalEcho.Builder:
-            return replace(self, url=url)
-
-        def with_header(self, key: str, value: str) -> InternalEcho.Builder:
-            return replace(self, headers=self.headers.merge({key: value}))
-
-        def with_timeout(self, *, seconds: int) -> InternalEcho.Builder:
-            _ = seconds
-
-            return self
-
-        def hook(self, with_a: HttpHook[HttpResponse]) -> InternalEcho.Builder:
-            _ = with_a
-
-            return self
-
-        def log(
-            self,
-            name: str,
-            echo_fn: Callable[[str], Any] = print,
-        ) -> InternalEcho.Builder:
-            _ = name, echo_fn
-
-            return self
-
-        def build(self) -> HttpTransport[HttpResponse]:
+    class Builder(HttpTransportBuilder):
+        def transport(self) -> HttpTransport[HttpResponse]:
             return InternalEcho(server=self.url, headers=self.headers)

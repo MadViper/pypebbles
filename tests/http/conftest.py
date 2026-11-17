@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -9,6 +10,7 @@ from pypebbles.http import (
     HttpRequest,
     HttpResponse,
     HttpTransport,
+    HttpTransportBuilder,
     Httpx,
     InternalEcho,
 )
@@ -52,7 +54,7 @@ def echo(request: pytest.FixtureRequest, echo_host: str) -> HttpTransport[Echo]:
 
 @dataclass(frozen=True)
 class _Director:
-    builder: type[Httpx.Builder | InternalEcho.Builder]
+    builder: type[HttpTransportBuilder]
 
     def make(self, host: str) -> _EchoTransport:
         return _EchoTransport(
