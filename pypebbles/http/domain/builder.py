@@ -5,6 +5,7 @@ from dataclasses import dataclass, field, replace
 from typing import TYPE_CHECKING
 
 from pypebbles import FluentDict
+from pypebbles.security import Hash
 
 from .hooks import Hooked, HttpHook
 from .log import AccessLog, EchoDevice
@@ -26,6 +27,11 @@ class HttpTransportBuilder(ABC):
 
     def with_base(self, *, url: str) -> Self:
         return replace(self, url=url)
+
+    def with_basic_auth(self, username: str, password: str) -> Self:
+        credentials = Hash.from_text(f"{username}:{password}").b64()
+
+        return self.with_header(key="Authorization", value=f"Basic {credentials}")
 
     def with_header(self, key: str, value: str) -> Self:
         return replace(self, headers=self.headers.merge({key: value}))

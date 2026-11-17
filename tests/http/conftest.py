@@ -61,6 +61,10 @@ class _Director:
             self.builder()
             .with_base(url=host)
             .with_timeout(seconds=10)
+            .with_basic_auth(
+                username="Thomas",
+                password="Riddle",
+            )
             .with_header(
                 key="User-Agent",
                 value="hogwarts",
