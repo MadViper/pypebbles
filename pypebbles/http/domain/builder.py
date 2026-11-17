@@ -33,6 +33,9 @@ class HttpTransportBuilder(ABC):
 
         return self.with_header(key="Authorization", value=f"Basic {credentials}")
 
+    def with_user_agent(self, named: str) -> Self:
+        return self.with_header(key="User-Agent", value=named)
+
     def with_header(self, key: str, value: str) -> Self:
         return replace(self, headers=self.headers.merge({key: value}))
 

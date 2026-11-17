@@ -65,10 +65,7 @@ class _Director:
                 username="Thomas",
                 password="Riddle",
             )
-            .with_header(
-                key="User-Agent",
-                value="hogwarts",
-            )
+            .with_user_agent(named="hogwarts")
             .log(name="http.access")
             .build()
         )
