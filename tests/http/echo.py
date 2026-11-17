@@ -25,6 +25,11 @@ class Echo:
     def endpoint(self) -> str:
         return self.raw.value_of("url").to(str).rpartition("/")[-1]
 
+    def assert_basic_auth(self, *, credentials: str) -> Self:
+        assert self.header(name="Authorization") == f"Basic {credentials}"
+
+        return self
+
     def assert_user_agent(self, *, expected: str) -> Self:
         assert self.header(name="User-Agent") == expected
 

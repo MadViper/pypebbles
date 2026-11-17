@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -8,6 +10,7 @@ from pypebbles.http import (
     HttpRequest,
     HttpResponse,
     HttpTransport,
+    HttpTransportBuilder,
     Httpx,
     InternalEcho,
 )
@@ -46,14 +49,26 @@ def echo(request: pytest.FixtureRequest, echo_host: str) -> HttpTransport[Echo]:
         case _ as kind:
             raise RuntimeError(f"Unknown kind: {kind}")
 
-    return _EchoTransport(
-        builder()
-        .with_base(url=echo_host)
-        .with_timeout(seconds=10)
-        .with_header("User-Agent", "hogwarts")
-        .log(name="http.access")
-        .build()
-    )
+    return _Director(builder).make(host=echo_host)
+
+
+@dataclass(frozen=True)
+class _Director:
+    builder: type[HttpTransportBuilder]
+
+    def make(self, host: str) -> _EchoTransport:
+        return _EchoTransport(
+            self.builder()
+            .with_base(url=host)
+            .with_timeout(seconds=10)
+            .with_basic_auth(
+                username="Thomas",
+                password="Riddle",
+            )
+            .with_user_agent(named="hogwarts")
+            .log(name="http.access")
+            .build()
+        )
 
 
 @dataclass(frozen=True)

@@ -1,3 +1,4 @@
+from .builder import HttpTransportBuilder
 from .hooks import Hooked, HttpHook, NoHook
 from .log import AccessLog, EchoDevice
 from .method import HttpMethod
@@ -15,6 +16,7 @@ __all__ = [
     "HttpRequest",
     "HttpResponse",
     "HttpTransport",
+    "HttpTransportBuilder",
     "HttpUrl",
     "NoHook",
 ]

@@ -15,6 +15,7 @@ def test_should_post(echo: HttpTransport[Echo], a_json: JsonDict) -> None:
         .using(echo)
         .dispatch(HttpMethod.post)
         .assert_endpoint(expected="post")
+        .assert_basic_auth(credentials="VGhvbWFzOlJpZGRsZQ==")
         .assert_user_agent(expected="hogwarts")
         .assert_content_type(expected="application/json")
         .assert_json(expected=a_json)
@@ -30,6 +31,7 @@ def test_should_submit(echo: HttpTransport[Echo], a_json: JsonDict) -> None:
         .using(echo)
         .dispatch(HttpMethod.post)
         .assert_endpoint(expected="post")
+        .assert_basic_auth(credentials="VGhvbWFzOlJpZGRsZQ==")
         .assert_user_agent(expected="hogwarts")
         .assert_content_type(expected="application/x-www-form-urlencoded")
         .assert_form(expected=a_json)
@@ -44,6 +46,7 @@ def test_should_get(echo: HttpTransport[Echo]) -> None:
         .using(echo)
         .dispatch(HttpMethod.get)
         .assert_endpoint(expected="get")
+        .assert_basic_auth(credentials="VGhvbWFzOlJpZGRsZQ==")
         .assert_user_agent(expected="hogwarts")
     )
 
@@ -57,6 +60,7 @@ def test_should_get_with_params(echo: HttpTransport[Echo]) -> None:
         .using(echo)
         .dispatch(HttpMethod.get)
         .assert_endpoint(expected="get?Color=Yellow")
+        .assert_basic_auth(credentials="VGhvbWFzOlJpZGRsZQ==")
     )
 
 
@@ -69,6 +73,7 @@ def test_should_patch(echo: HttpTransport[Echo], a_json: JsonDict) -> None:
         .using(echo)
         .dispatch(HttpMethod.patch)
         .assert_endpoint(expected="patch")
+        .assert_basic_auth(credentials="VGhvbWFzOlJpZGRsZQ==")
         .assert_user_agent(expected="hogwarts")
         .assert_content_type(expected="application/json")
         .assert_json(expected=a_json)
@@ -83,6 +88,7 @@ def test_should_delete(echo: HttpTransport[Echo]) -> None:
         .using(echo)
         .dispatch(HttpMethod.delete)
         .assert_endpoint(expected="delete")
+        .assert_basic_auth(credentials="VGhvbWFzOlJpZGRsZQ==")
         .assert_user_agent(expected="hogwarts")
     )
 
@@ -96,6 +102,7 @@ def test_should_put(echo: HttpTransport[Echo], a_json: JsonDict) -> None:
         .using(echo)
         .dispatch(HttpMethod.put)
         .assert_endpoint(expected="put")
+        .assert_basic_auth(credentials="VGhvbWFzOlJpZGRsZQ==")
         .assert_user_agent(expected="hogwarts")
         .assert_content_type(expected="application/json")
         .assert_json(expected=a_json)
