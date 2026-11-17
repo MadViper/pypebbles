@@ -3,9 +3,13 @@ name = "pypebbles"
 version = "0.4.1"
 description = "Python Pebbles"
 readme = "README.md"
-authors = [ { name = "Mike Pebbles", email = "mq.pebbles@gmail.com" } ]
+authors = [
+    { name = "Mike Pebbles", email = "mq.pebbles@gmail.com" },
+]
 requires-python = ">=3.12,<4"
-dynamic = [ "dependencies" ]
+dynamic = [
+    "dependencies",
+]
 
 [tool.poetry.dependencies]
 bcrypt = "*"
