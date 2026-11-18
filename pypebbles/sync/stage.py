@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
 from dataclasses import dataclass, field, replace
 from typing import TYPE_CHECKING, Self
+
+from .selectors import AllSelector, Selector
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable
@@ -62,34 +63,6 @@ class Committer[T]:
     def notify_before_commit(self, n_items: int) -> None:
         for observer in self.observers:
             observer.before_commit(n_items)
-
-
-class Selector[T](ABC):  # pragma: no cover
-    def __call__(self, items: Iterable[T]) -> Iterable[T]:
-        return self.select(items)
-
-    @abstractmethod
-    def select(self, items: Iterable[T]) -> Iterable[T]:
-        pass
-
-    def only_changes(self, *, when: bool = True) -> Selector[T]:
-        return ChangeSelector(self) if when else self
-
-
-@dataclass(frozen=True)
-class AllSelector[T](Selector[T]):
-    def select(self, items: Iterable[T]) -> Iterable[T]:
-        return items
-
-
-@dataclass(frozen=True)
-class ChangeSelector[T](Selector[T]):
-    inner: Selector[T]
-
-    def select(self, items: Iterable[T]) -> Iterable[T]:
-        target = set(items)
-
-        return set(self.inner.select(target)).difference(target)
 
 
 @dataclass(frozen=True)

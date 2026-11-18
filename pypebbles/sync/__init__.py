@@ -1,8 +1,11 @@
 from .observers import CommitLog, CommitObserver, ErrorCollector
-from .stage import Committer, Selector, SyncStage
+from .selectors import AllSelector, ChangeSelector, Selector
+from .stage import Committer, SyncStage
 from .sync import Sync
 
 __all__ = [
+    "AllSelector",
+    "ChangeSelector",
     "CommitLog",
     "CommitObserver",
     "Committer",
