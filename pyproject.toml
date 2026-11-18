@@ -1,6 +1,6 @@
 [project]
 name = "pypebbles"
-version = "0.5.0"
+version = "0.5.1"
 description = "Python Pebbles"
 readme = "README.md"
 authors = [
