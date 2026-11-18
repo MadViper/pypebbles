@@ -46,7 +46,7 @@ def echo(request: pytest.FixtureRequest, echo_host: str) -> HttpTransport[Echo]:
             builder = Httpx.Builder
         case "internal":
             builder = InternalEcho.Builder
-        case _ as kind:
+        case _ as kind:  # pragma: no cover
             raise RuntimeError(f"Unknown kind: {kind}")
 
     return _Director(builder).make(host=echo_host)
