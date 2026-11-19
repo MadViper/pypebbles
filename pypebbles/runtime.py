@@ -4,6 +4,8 @@ import os
 from dataclasses import dataclass, field
 from typing import Protocol
 
+from dotenv import load_dotenv
+
 
 class Provider(Protocol):  # pragma: no cover
     def required_value_of(self, variable: str) -> str:
@@ -25,6 +27,10 @@ class _DefaultProvider(Provider):
 @dataclass(frozen=True)
 class Environment:
     provider: Provider = field(default_factory=_DefaultProvider)
+
+    @staticmethod
+    def load(dotenv: str = ".env") -> None:
+        load_dotenv(dotenv)
 
     def inject(self, variable: str, *, default: str | None = None) -> str:
         return field(

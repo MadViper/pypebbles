@@ -15,6 +15,7 @@ dynamic = [
 bcrypt = "*"
 httpx2 = "*"
 pyjwt = "*"
+python-dotenv = "*"
 
 [tool.poetry.group.dev.dependencies]
 apexcodexpy = "0.8.*"
@@ -24,8 +25,10 @@ pytest = "*"
 pytest-apex = "*"
 pytest-recording = "*"
 
-[tool.ruff.lint.mccabe]
-max-complexity = 10
+[tool.ruff]
+extend-exclude = [
+    "migrations",
+]
 
 [tool.ruff.lint]
 select = [
@@ -65,6 +68,11 @@ ignore = [
     "TRY003",
 ]
 
+[tool.deptry]
+extend_exclude = [
+    "migrations",
+]
+
 [tool.mypy]
 ignore_missing_imports = true
 strict = true
@@ -79,6 +87,12 @@ source = [
 branch = true
 
 [tool.coverage.report]
+exclude_also = [
+    "@(abc\\.)?abstractmethod",
+    "class .*\\bProtocol\\)",
+    "if TYPE_CHECKING:",
+]
 skip_covered = true
 skip_empty = true
 show_missing = true
+sort = "Cover"
