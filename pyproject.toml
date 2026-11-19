@@ -15,6 +15,7 @@ dynamic = [
 bcrypt = "*"
 httpx2 = "*"
 pyjwt = "*"
+python-dotenv = "*"
 
 [tool.poetry.group.dev.dependencies]
 apexcodexpy = "0.8.*"
